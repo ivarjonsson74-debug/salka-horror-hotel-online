@@ -1,0 +1,2211 @@
+<!doctype html>
+<html lang="is">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <title>Salka Horror Hotel</title>
+  <meta name="description" content="Reimt hótel fyrir einn eða 2–4 vini í netspilun. Finnið lyklana og sleppið undan Húsverðinum.">
+  <meta name="theme-color" content="#07080d">
+  <meta name="color-scheme" content="dark">
+  <meta name="application-name" content="Salka Horror Hotel">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta property="og:locale" content="is_IS">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Salka Horror Hotel">
+  <meta property="og:description" content="Flýðu úr reimdu hóteli áður en Húsvörðurinn finnur þig.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2307080d'/%3E%3Cpath d='M14 50V23L32 10l18 13v27H38V37H26v13H14Z' fill='%23ff2b3a' stroke='%23000' stroke-width='4'/%3E%3Ccircle cx='25' cy='28' r='3' fill='%23f4c542'/%3E%3Ccircle cx='39' cy='28' r='3' fill='%23f4c542'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#07080d; --panel:#131622; --panel2:#0c0e17; --ink:#f2f0e9; --dim:#9aa0b4;
+    --red:#ff2b3a; --red2:#8f0f1b; --gold:#f4c542; --blue:#4f8dff; --green:#3fbf6f;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg)}
+  body{font-family:"Avenir Next","Arial Rounded MT Bold",system-ui,"Segoe UI",sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+  #cv{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+  #ui{position:fixed;inset:0;pointer-events:none;z-index:10}
+  .scr{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:auto;background:rgba(4,5,9,.55);overflow:auto;padding:12px}
+  .hidden{display:none!important}
+  .panel{background:var(--panel);border:4px solid #000;border-radius:22px;
+    box-shadow:0 12px 0 rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.06);
+    padding:24px 28px;width:min(94vw,560px);text-align:center;position:relative;margin:auto}
+  .panel.wide{width:min(96vw,700px)}
+  h1.title{margin:2px 0 4px;font-weight:900;font-size:clamp(40px,9vw,72px);line-height:.95;letter-spacing:2px;color:var(--red);
+    text-shadow:0 5px 0 #000,0 -2px 0 #000,3px 0 0 #000,-3px 0 0 #000,0 10px 24px rgba(255,43,58,.35);
+    animation:flick 7s infinite}
+  h1.title em{display:block;font-style:normal;font-size:.42em;letter-spacing:8px;color:var(--gold);
+    text-shadow:0 3px 0 #000,2px 0 0 #000,-2px 0 0 #000;margin-top:6px}
+  @keyframes flick{0%,100%{opacity:1}92%{opacity:1}93%{opacity:.55}94%{opacity:1}96%{opacity:.7}97%{opacity:1}}
+  .ghostie{font-size:44px;animation:floaty 3.2s ease-in-out infinite;filter:drop-shadow(0 6px 8px rgba(0,0,0,.6))}
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-10px) rotate(4deg)}}
+  .tag{color:var(--dim);font-size:14.5px;margin:8px 0 14px;line-height:1.45}
+  .btn{display:block;width:100%;margin:9px 0;padding:14px 18px;font:inherit;font-weight:900;font-size:19px;color:#fff;
+    background:linear-gradient(#2b3350,#1d2337);border:3.5px solid #000;border-radius:16px;cursor:pointer;
+    box-shadow:0 6px 0 #000;transition:transform .08s,box-shadow .08s;letter-spacing:.5px}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 8px 0 #000}
+  .btn:active{transform:translateY(3px);box-shadow:0 2px 0 #000}
+  .btn:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  .btn.primary{background:linear-gradient(#ff4d5a,#c01423);font-size:22px}
+  .btn.quiet{background:linear-gradient(#1a1f30,#12151f);color:var(--dim)}
+  .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0}
+  .row.tiny{margin-top:14px}
+  .chip{font:inherit;font-weight:800;font-size:13.5px;color:var(--dim);background:var(--panel2);
+    border:3px solid #000;border-radius:999px;padding:8px 14px;cursor:pointer;box-shadow:0 4px 0 #000;transition:transform .08s}
+  .chip:hover{transform:translateY(-1px)}
+  .chip:active{transform:translateY(2px);box-shadow:0 1px 0 #000}
+  .chip.sel{color:#fff;background:linear-gradient(#3d4668,#252c45);box-shadow:0 4px 0 #000,inset 0 0 0 2px var(--gold)}
+  .best{color:var(--gold);font-weight:800;font-size:13px;margin:10px 0 0;min-height:16px}
+  .howto{ text-align:left;font-size:13.5px;line-height:1.5;color:var(--ink)}
+  .howto h2{font-size:20px;margin:6px 0 10px;color:var(--gold);text-align:center;letter-spacing:1px}
+  .howto table{width:100%;border-collapse:collapse;margin:8px 0 14px;font-size:13px}
+  .howto th{color:var(--gold);text-align:left;padding:4px 8px;border-bottom:2px solid #000;font-size:12px;letter-spacing:1px;text-transform:uppercase}
+  .howto td{padding:5px 8px;border-bottom:1px solid rgba(255,255,255,.07)}
+  .howto td.k{white-space:nowrap;font-weight:900;color:#fff}
+  .kbd{display:inline-block;background:#20263c;border:2px solid #000;border-bottom-width:4px;border-radius:7px;padding:1px 8px;font-weight:900;font-size:12px;color:#fff;margin:1px}
+  .howto ul{margin:6px 0;padding-left:20px}
+  .howto li{margin:5px 0;color:var(--dim)}
+  .howto li b{color:var(--ink)}
+  h2.big{font-weight:900;font-size:clamp(28px,6vw,44px);margin:4px 0 8px;letter-spacing:1px;text-shadow:0 4px 0 #000}
+  h2.big.bad{color:var(--red)} h2.big.good{color:var(--green)}
+  .stats{margin:12px auto;max-width:340px;text-align:left;font-size:15px}
+  .stats div{display:flex;justify-content:space-between;padding:6px 4px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .stats b{color:var(--gold);font-variant-numeric:tabular-nums}
+  #note{position:absolute;left:50%;top:18%;transform:translateX(-50%) rotate(-2deg);pointer-events:none;
+    background:#e8dcb8;color:#2a2113;border:3px solid #000;border-radius:6px;box-shadow:0 10px 0 rgba(0,0,0,.5);
+    padding:16px 20px;max-width:min(84vw,420px);font-size:16px;font-weight:700;line-height:1.5;font-style:italic;z-index:20}
+  #note:after{content:"— gamall miði";display:block;font-size:11px;margin-top:8px;opacity:.6;font-style:normal}
+  /* touch controls — v2.1 mobile */
+  #touch{position:absolute;inset:0;pointer-events:none;z-index:15;touch-action:none;
+    user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+  #joyZone{position:absolute;left:0;top:0;bottom:0;width:58%;pointer-events:auto;touch-action:none}
+  #joy{position:absolute;left:calc(env(safe-area-inset-left,0px) + 92px);
+    bottom:calc(env(safe-area-inset-bottom,0px) + 28px);width:156px;height:156px;border-radius:50%;
+    background:rgba(255,255,255,.075);border:3px solid rgba(255,255,255,.28);
+    box-shadow:inset 0 0 0 2px rgba(0,0,0,.35),0 6px 18px rgba(0,0,0,.28);
+    opacity:.78;transition:opacity .12s,transform .12s;pointer-events:none}
+  #joy.active{opacity:1;transform:scale(1.04)}
+  #stick{position:absolute;left:50%;top:50%;width:68px;height:68px;border-radius:50%;
+    background:rgba(255,255,255,.38);border:3px solid #000;
+    box-shadow:0 4px 0 rgba(0,0,0,.75);transform:translate(-50%,-50%)}
+  #tbtns{position:absolute;right:calc(env(safe-area-inset-right,0px) + 18px);
+    bottom:calc(env(safe-area-inset-bottom,0px) + 18px);display:grid;
+    grid-template-columns:68px 82px;grid-template-rows:68px 82px;gap:12px;
+    align-items:end;justify-items:end;pointer-events:auto}
+  .tb{width:68px;height:68px;border-radius:50%;border:3px solid #000;background:rgba(30,36,58,.88);
+    color:#fff;font-size:27px;box-shadow:0 5px 0 #000;pointer-events:auto;touch-action:none;
+    -webkit-tap-highlight-color:transparent}
+  .tb:active,.tb.pressed{transform:translateY(3px) scale(.97);box-shadow:0 1px 0 #000}
+  .tb.on{background:rgba(255,43,58,.78)}
+  #tAct{width:82px;height:82px;font-size:34px;background:rgba(64,82,132,.94)}
+  #tSprint{width:82px;height:82px;font-size:31px}
+  #tmap{position:absolute;right:calc(env(safe-area-inset-right,0px) + 16px);
+    top:calc(env(safe-area-inset-top,0px) + 16px);width:58px;height:58px;font-size:23px;pointer-events:auto}
+  #rotateHint{display:none;position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 52px);
+    transform:translateX(-50%);padding:7px 12px;border:2px solid #000;border-radius:999px;
+    background:rgba(10,12,20,.82);color:#e8dcb8;font-size:12px;font-weight:800;
+    white-space:nowrap;pointer-events:none}
+  @media (orientation:portrait) and (max-width:700px){
+    #rotateHint{display:block}
+    #joy{width:146px;height:146px;left:calc(env(safe-area-inset-left,0px) + 82px)}
+    #stick{width:64px;height:64px}
+    #tbtns{grid-template-columns:64px 76px;grid-template-rows:64px 76px;gap:10px}
+    .tb{width:64px;height:64px}
+    #tAct,#tSprint{width:76px;height:76px}
+  }
+  @media (orientation:landscape) and (max-height:480px){
+    #joy{width:144px;height:144px;left:calc(env(safe-area-inset-left,0px) + 82px);
+      bottom:calc(env(safe-area-inset-bottom,0px) + 14px)}
+    #stick{width:62px;height:62px}
+    #tbtns{right:calc(env(safe-area-inset-right,0px) + 12px);
+      bottom:calc(env(safe-area-inset-bottom,0px) + 10px);gap:9px}
+  }
+  /* netspilun */
+  .netForm{display:grid;gap:10px;text-align:left;margin:14px 0}
+  .netForm label{font-size:12px;font-weight:900;letter-spacing:.7px;color:var(--gold);text-transform:uppercase}
+  .netInput{width:100%;margin-top:5px;padding:13px 14px;border:3px solid #000;border-radius:13px;
+    background:#0c0f19;color:#fff;font:800 18px inherit;outline:none;box-shadow:inset 0 2px 0 rgba(255,255,255,.04)}
+  .netInput:focus{border-color:var(--gold)}
+  #netCode{text-transform:uppercase;letter-spacing:6px;text-align:center;font-size:24px}
+  .netDivider{display:flex;align-items:center;gap:10px;color:var(--dim);font-size:12px;font-weight:900;margin:5px 0}
+  .netDivider:before,.netDivider:after{content:"";height:1px;background:rgba(255,255,255,.12);flex:1}
+  .roomCode{font-size:clamp(34px,9vw,54px);letter-spacing:8px;color:var(--gold);font-weight:1000;
+    text-shadow:0 4px 0 #000;margin:8px 0}
+  .playerList{display:grid;gap:7px;margin:13px 0;text-align:left}
+  .playerRow{display:flex;align-items:center;justify-content:space-between;background:#0c0f19;border:2px solid #000;
+    border-radius:12px;padding:9px 12px;font-weight:800}
+  .playerRow.off{opacity:.45}.playerRow .host{color:var(--gold);font-size:12px}.playerRow .you{color:#8fd6ff;font-size:12px}
+  .netStatus{min-height:20px;color:var(--dim);font-size:13px;line-height:1.35;margin:9px 0}
+  .netStatus.err{color:#ff8b96}.netStatus.ok{color:#8fe0a8}
+  .onlineBadge{position:absolute;right:12px;top:50px;padding:5px 9px;border:2px solid #000;border-radius:999px;
+    background:rgba(10,13,22,.8);font:800 11px system-ui,sans-serif;color:#8fe0a8}
+  button:disabled{opacity:.42;cursor:not-allowed;transform:none!important}
+
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div id="ui">
+  <div class="scr" id="menu">
+    <div class="panel">
+      <div class="ghostie">👻</div>
+      <h1 class="title">SALKA<em>HORROR HOTEL</em></h1>
+      <p class="tag">Reimt hótel. Fimm lyklar. Einn <b>Húsvörður</b> á sveimi —<br>ekki láta hann sjá þig…</p>
+      <div class="row">
+        <button class="chip" id="d0">🙂 Auðvelt</button>
+        <button class="chip sel" id="d1">😨 Venjulegt</button>
+        <button class="chip" id="d2">💀 Martröð</button>
+      </div>
+      <div class="row" style="margin:2px 0 6px">
+        <button class="chip" id="soft">👻 Hryllingur: venjulegur</button>
+        <button class="chip" id="daily">📅 Dagsleikur</button>
+      </div>
+      <button class="btn primary" id="b1">▶&nbsp; Spila einn</button>
+      <button class="btn" id="b2">👥&nbsp; Spila tveir — sama lyklaborð</button>
+      <button class="btn" id="bnet">🌐&nbsp; Spila saman á netinu</button>
+      <button class="btn quiet" id="bh">❓&nbsp; Leiðbeiningar</button>
+      <div class="row tiny">
+        <button class="chip" id="bm">🔊 Hljóð: Á</button>
+        <button class="chip" id="bf">⛶ Fullur skjár</button>
+      </div>
+      <p class="best" id="bestTxt"></p>
+      <p class="best" id="collTxt" style="color:var(--dim)"></p>
+    </div>
+  </div>
+
+  <div class="scr hidden" id="netLobby">
+    <div class="panel wide">
+      <h2 class="big" style="color:var(--gold)">🌐 NETSPILUN</h2>
+      <div id="netSetup">
+        <p class="tag">Stofnaðu einkaherbergi eða tengstu vinum með sex stafa kóða. Allt að fjórir geta spilað saman.</p>
+        <div class="netForm">
+          <label>Nafn leikmanns
+            <input class="netInput" id="netName" maxlength="16" autocomplete="nickname" placeholder="Salka">
+          </label>
+          <button class="btn primary" id="netCreate">Stofna netleik</button>
+          <div class="netDivider">EÐA</div>
+          <label>Herbergiskóði
+            <input class="netInput" id="netCode" maxlength="6" inputmode="text" autocomplete="off" placeholder="ABC123">
+          </label>
+          <button class="btn" id="netJoin">Tengjast leik</button>
+        </div>
+      </div>
+      <div id="netRoom" class="hidden">
+        <p class="tag">Sendu vinum þínum kóðann:</p>
+        <div class="roomCode" id="netRoomCode">------</div>
+        <button class="chip" id="netCopy">📋 Afrita kóða</button>
+        <div class="playerList" id="netPlayers"></div>
+        <button class="btn primary" id="netStart">▶ Hefja netleik</button>
+        <p class="tag">Gestgjafinn velur erfiðleikastig og hefur leikinn. Ef gestgjafinn dettur út tekur annar tengdur leikmaður við.</p>
+      </div>
+      <p class="netStatus" id="netStatus"></p>
+      <button class="btn quiet" id="netBack">← Til baka</button>
+    </div>
+  </div>
+
+  <div class="scr hidden" id="howto">
+    <div class="panel wide howto">
+      <h2>❓ LEIÐBEININGAR</h2>
+      <table>
+        <tr><th></th><th>Spilari 1</th><th>Spilari 2</th></tr>
+        <tr><td class="k">Hreyfa sig</td><td><span class="kbd">W</span><span class="kbd">A</span><span class="kbd">S</span><span class="kbd">D</span></td><td><span class="kbd">↑</span><span class="kbd">←</span><span class="kbd">↓</span><span class="kbd">→</span></td></tr>
+        <tr><td class="k">Hlaupa</td><td><span class="kbd">Shift</span> (vinstri)</td><td><span class="kbd">Shift</span> (hægri)</td></tr>
+        <tr><td class="k">Opna / fela sig / taka</td><td><span class="kbd">E</span></td><td><span class="kbd">Enter</span></td></tr>
+        <tr><td class="k">Vasaljós-blossi</td><td><span class="kbd">F</span></td><td><span class="kbd">.</span></td></tr>
+        <tr><td class="k">Sveifla pönnu</td><td><span class="kbd">Q</span></td><td><span class="kbd">,</span></td></tr>
+        <tr><td class="k">Kort (overview)</td><td colspan="2"><span class="kbd">M</span> eða <span class="kbd">Tab</span></td></tr>
+        <tr><td class="k">Pása</td><td colspan="2"><span class="kbd">Esc</span></td></tr>
+        <tr><td class="k">Fjarstýring 🎮</td><td colspan="2">Vinstri pinni hreyfir · <span class="kbd">A</span> opna/fela · <span class="kbd">X</span> panna · <span class="kbd">Y</span> ljós · <span class="kbd">RB</span>/<span class="kbd">B</span> hlaupa · <span class="kbd">Start</span> pása · <span class="kbd">Back</span> kort</td></tr>
+      </table>
+      <ul>
+        <li>🔑 <b>Lyklakeðjan:</b> Rauður → Blár → Grænn → Fjólublár → <b>GULL</b> = útgöngudyrnar! Hver lykill gefur stig.</li>
+        <li>👂 Húsvörðurinn <b>heyrir</b> þegar þú hleypur. Læddu þér þegar hann er nálægt.</li>
+        <li>🚪 Feldu þig í <b>skápum</b> eða <b>undir rúmum</b> — en ekki láta hann sjá þig fara í felur! Lokaðu hurðum á eftir þér til að tefja hann.</li>
+        <li>🏊 Hann fer <b>aldrei</b> ofan í sundlaugina.</li>
+        <li>🔦 Vasaljósið dasar hann með blossa. 🍳 Pannan fælir hann í burtu — en hún þolir bara nokkur högg.</li>
+        <li>👕 Í <b>fataskápum</b> leynast búningar með ofurkröftum — ýttu aftur á fataskáp til að skipta um föt.</li>
+        <li>🍫 Súkkulaði gefur hjarta til baka. 📜 Gamlir miðar geyma vísbendingar…</li>
+        <li>🔀 <b>Hver leikur er öðruvísi:</b> lyklarnir, búningarnir og Húsvörðurinn byrja á mismunandi stöðum. „Leikur #“ neðst í horninu er númerið á þinni útgáfu.</li>
+        <li>💨 Í felum nálægt honum klárast <b>andardrátturinn</b> — komdu þér annað áður en hann heyrir í þér!</li>
+        <li>🥶 Sundlaugin er skjól, en þú <b>kólnar</b> í vatninu — farðu upp úr reglulega.</li>
+        <li>⚡ Hótelið hagar sér undarlega: rafmagnsleysi, símhringingar, hurðaskellir… fylgstu með tilkynningum!</li>
+        <li>📱 <b>Í síma:</b> snertu vinstri helming skjásins þar sem þumallinn liggur; stýripinninn færist þangað. Ýttu stutt til að ganga hægt og lengra frá miðju til að ganga hraðar. Haltu hlaupahnappinum inni til að hlaupa.</li>
+        <li>👥 Í tveggja spilara leik geturðu <b>reist félaga þinn við</b> með því að halda inni „opna“-takkanum hjá honum.</li>
+      </ul>
+      <button class="btn" id="bhb">← Til baka</button>
+    </div>
+  </div>
+
+  <div class="scr hidden" id="pause">
+    <div class="panel">
+      <h2 class="big" style="color:var(--gold)">⏸ PÁSA</h2>
+      <p class="tag">Húsvörðurinn bíður… kannski.</p>
+      <button class="btn primary" id="pr">▶ Halda áfram</button>
+      <button class="btn" id="ph">❓ Leiðbeiningar</button>
+      <button class="btn" id="pn">🔄 Byrja upp á nýtt</button>
+      <button class="btn quiet" id="pm">🏠 Aðalvalmynd</button>
+    </div>
+  </div>
+
+  <div class="scr hidden" id="end">
+    <div class="panel">
+      <h2 class="big bad" id="endTitle">💀</h2>
+      <p class="tag" id="endSub"></p>
+      <div class="stats" id="endStats"></div>
+      <button class="btn primary" id="er">🔄 Spila aftur</button>
+      <button class="btn quiet" id="em">🏠 Aðalvalmynd</button>
+    </div>
+  </div>
+
+  <div id="note" class="hidden"></div>
+
+  <div id="touch" class="hidden">
+    <div id="joyZone" aria-label="Hreyfistýring">
+      <div id="joy"><div id="stick"></div></div>
+    </div>
+    <div id="tbtns">
+      <button class="tb" id="tPan" aria-label="Sveifla pönnu">🍳</button>
+      <button class="tb" id="tFlash" aria-label="Nota vasaljós">🔦</button>
+      <button class="tb" id="tSprint" aria-label="Haltu inni til að hlaupa">🏃</button>
+      <button class="tb" id="tAct" aria-label="Opna, taka eða fela sig">✋</button>
+    </div>
+    <button class="tb" id="tmap" aria-label="Opna kort">🗺️</button>
+    <div id="rotateHint">↻ Best er að spila með símann á hlið</div>
+  </div>
+</div>
+
+<script>
+'use strict';
+(()=>{
+// v3 online (2026-07-09) — v2.1 + 2–4 manna netspilun með Cloudflare Durable Objects: slembnir lykla-/búningastaðir + leikjanúmer (seed),
+// hótelatvik, 3 erfiðleikastig + ábendingaör, andardráttur í felum, kuldi í lauginni,
+// sýnilegt undanhald Húsvarðar, búningasafn + afrek (localStorage), gamepad-stuðningur,
+// léttur hryllingur, villulagfæringar (TC-reset, fataskápstexti í tvíspilun).
+// ============================================================ CONSTS & UTILS
+const cv=document.getElementById('cv'), ctx=cv.getContext('2d');
+let DPR=1, VW=0, VH=0;
+const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
+const lerp=(a,b,t)=>a+(b-a)*t;
+const dist=(x1,y1,x2,y2)=>Math.hypot(x2-x1,y2-y1);
+const angDiff=(a,b)=>{let d=(b-a)%(Math.PI*2); if(d>Math.PI)d-=Math.PI*2; if(d<-Math.PI)d+=Math.PI*2; return d;};
+function mulberry(seed){return function(){seed|=0;seed=(seed+0x6D2B79F5)|0;let t=Math.imul(seed^(seed>>>15),1|seed);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296;};}
+let rnd=mulberry(1337);
+function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();}
+
+const KEYCOL={red:'#ff4d5a',blue:'#4f8dff',green:'#3fbf6f',purple:'#a862ea',gold:'#f4c542'};
+const KEYNAME={red:'Rauði lykillinn',blue:'Blái lykillinn',green:'Græni lykillinn',purple:'Fjólublái lykillinn',gold:'GULLLYKILLINN'};
+const KEYPTS={red:100,blue:150,green:200,purple:250,gold:300};
+const KEYORD=['red','blue','green','purple','gold'];
+const OUTFITS=[
+  {n:'Venjuleg föt',c:'#4f8dff',d:'Engir sérkraftar'},
+  {n:'Íþróttagalli',c:'#ff4d5a',d:'+15% hraði',perk:'speed'},
+  {n:'Njósnaraföt',c:'#23283a',d:'Húsvörðurinn sér þig verr',perk:'spy'},
+  {n:'Gullskikkja',c:'#f4c542',d:'Peningar gefa tvöfalt',perk:'gold'},
+  {n:'Draugabúningur',c:'#dfe6ff',d:'Hann gefst fyrr upp',perk:'ghost'},
+  {n:'Kokkabúningur',c:'#f5f0e6',d:'Pannan endist tvöfalt',perk:'chef'},
+  {n:'Sundföt',c:'#37c3dd',d:'Fullur hraði í vatni',perk:'swim'},
+];
+
+// ---- v2: hótelatvik, afrek, slembistaðir, varanleg geymsla
+const EVENTS=['myrkvun','simi','skellur','flokt','hvisl'];
+const ACH=[
+  {id:'engin_spor',n:'Engin spor',d:'Slapp út án þess að hlaupa'},
+  {id:'osnertur',n:'Ósnertanleg(ur)',d:'Slapp út án þess að missa hjarta'},
+  {id:'hotelrynir',n:'Hótelrýnir',d:'Kannaði öll herbergin'},
+  {id:'bestu_vinir',n:'Bestu vinir',d:'Tveir sluppu út saman'},
+  {id:'pannumeistari',n:'Pönnumeistari',d:'Hitti hann 4× með pönnunni í einni umferð'},
+  {id:'martrod',n:'Martraðameistari',d:'Slapp út á Martröð'},
+  {id:'safnari',n:'Fatasafnari',d:'Fann alla 6 földu búningana (samtals)'},
+];
+const KEYSPOTS={
+  red:[[35.5,43.3],[30.5,37.3],[44.5,47.5],[29.5,40.5]],
+  blue:[[15.5,25.5],[18.5,23.5],[12.5,26.5],[19.5,27.5]],
+  green:[[56.5,4.5],[59.5,5.5],[53.5,5.5],[58.5,3.5]],
+  purple:[[7.5,46.5],[4.5,45.5],[10.5,45.5],[7.5,48.5]],
+  gold:[[33.5,25.5],[28.5,24.5],[34.5,27.5],[29.5,26.5]],
+};
+const MONSTARTS=[[67.5,46.5],[67.5,4.5],[16.5,16.5],[65.5,17.5],[55.5,41.5]];
+const PERS={
+  get(k,d){ try{ const v=localStorage.getItem(k); return v===null?d:JSON.parse(v); }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} },
+};
+let collOutfits=PERS.get('salka_outfits',[]), achDone=PERS.get('salka_ach',[]), escCount=PERS.get('salka_esc',0);
+function grantAch(id){
+  if(achDone.includes(id))return;
+  achDone.push(id); PERS.set('salka_ach',achDone);
+  const a=ACH.find(x=>x.id===id);
+  G.newAchs.push(a); toast('🏅 AFREK: '+a.n+' — '+a.d,'#f4c542',true);
+}
+
+// ============================================================ AUDIO (allt búið til í WebAudio)
+const A={ac:null,on:true,master:null,
+  init(){ if(this.ac) return; try{
+    this.ac=new (window.AudioContext||window.webkitAudioContext)();
+    this.master=this.ac.createGain(); this.master.gain.value=.8; this.master.connect(this.ac.destination);
+  }catch(e){} },
+  g(){ return (this.ac&&this.on)?this.master:null; },
+  tone(f0,f1,dur,type,vol,when=0){ const m=this.g(); if(!m)return; try{
+    const t=this.ac.currentTime+when, o=this.ac.createOscillator(), g=this.ac.createGain();
+    o.type=type||'sine'; o.frequency.setValueAtTime(f0,t);
+    if(f1&&f1!==f0) o.frequency.exponentialRampToValueAtTime(Math.max(20,f1),t+dur);
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+.012);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.connect(g); g.connect(m); o.start(t); o.stop(t+dur+.05);
+  }catch(e){} },
+  noise(dur,vol,fc,type='lowpass',when=0){ const m=this.g(); if(!m)return; try{
+    const t=this.ac.currentTime+when, n=Math.floor(this.ac.sampleRate*dur),
+      b=this.ac.createBuffer(1,n,this.ac.sampleRate), d=b.getChannelData(0);
+    for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*(1-i/n);
+    const s=this.ac.createBufferSource(); s.buffer=b;
+    const f=this.ac.createBiquadFilter(); f.type=type; f.frequency.value=fc;
+    const g=this.ac.createGain(); g.gain.value=vol;
+    s.connect(f); f.connect(g); g.connect(m); s.start(t);
+  }catch(e){} },
+  coin(){ this.tone(920,1245,.09,'square',.10); this.tone(1245,1660,.12,'square',.09,.07); },
+  key(){ [523,659,784,1047].forEach((f,i)=>this.tone(f,f,.14,'triangle',.16,i*.08)); },
+  unlock(){ this.tone(392,523,.15,'triangle',.16); this.noise(.12,.12,2200,'highpass',.05); this.tone(659,784,.2,'triangle',.14,.14); },
+  deny(){ this.tone(196,150,.22,'sawtooth',.12); },
+  creak(){ this.tone(95,72,.55,'sawtooth',.05); this.noise(.4,.05,900,'bandpass'); },
+  whoosh(){ this.noise(.28,.16,700,'lowpass'); },
+  clang(){ this.tone(210,180,.28,'square',.2); this.tone(317,290,.22,'square',.14); this.noise(.15,.16,3500,'highpass'); },
+  brk(){ this.noise(.3,.2,1800,'highpass'); this.tone(160,90,.3,'square',.14); },
+  zap(){ this.tone(1400,220,.22,'sawtooth',.18); this.noise(.1,.1,4000,'highpass'); },
+  fizzle(){ this.tone(300,180,.12,'sawtooth',.06); },
+  step(){ this.noise(.05,.03,500,'lowpass'); },
+  splash(){ this.noise(.22,.1,1000,'lowpass'); },
+  eat(){ this.tone(330,392,.1,'triangle',.14); this.tone(392,523,.12,'triangle',.14,.09); },
+  paper(){ this.noise(.2,.08,2500,'highpass'); },
+  cloth(){ this.noise(.25,.1,1400,'bandpass'); },
+  thump(v){ this.tone(58,40,.16,'sine',v); this.tone(58,40,.14,'sine',v*.8,.18); },
+  sting(){ this.tone(207,196,.7,'sawtooth',.16); this.tone(200,190,.7,'sawtooth',.16,.02); this.noise(.35,.1,300,'lowpass'); },
+  scream(){ const v=(typeof G!=='undefined'&&G.soft)?.35:1; this.tone(820,140,.75,'sawtooth',.34*v); this.tone(620,110,.7,'sawtooth',.26*v,.04); this.noise(.7,.3*v,1400,'bandpass'); },
+  growl(){ this.tone(72,48,.8,'sawtooth',.14); this.noise(.5,.08,220,'lowpass'); },
+  thunder(){ this.noise(1.4,.24,320,'lowpass'); this.tone(52,30,1.2,'sine',.16); },
+  ring(){ for(let i=0;i<3;i++){ this.tone(880,880,.22,'sine',.14,i*.6); this.tone(660,660,.22,'sine',.12,i*.6+.28); } },
+  slam(){ this.noise(.25,.3,500,'lowpass'); this.tone(70,45,.3,'sine',.3); },
+  whisper(){ this.noise(1.4,.07,900,'bandpass'); this.noise(1.1,.05,1800,'bandpass',.5); },
+  win(){ [523,659,784,1047,1319].forEach((f,i)=>this.tone(f,f,.28,'triangle',.2,i*.13)); },
+  lose(){ [392,311,262,196].forEach((f,i)=>this.tone(f,f*.94,.5,'sawtooth',.14,i*.22)); },
+  amb:null,
+  startAmb(){ const m=this.g(); if(!m||this.amb) return; try{
+    const o1=this.ac.createOscillator(),o2=this.ac.createOscillator(),g=this.ac.createGain();
+    o1.type='sine';o1.frequency.value=54; o2.type='sine';o2.frequency.value=54.7;
+    g.gain.value=.045; o1.connect(g);o2.connect(g); g.connect(m); o1.start();o2.start();
+    this.amb={o1,o2,g};
+  }catch(e){} },
+  stopAmb(){ try{ if(this.amb){this.amb.o1.stop();this.amb.o2.stop();this.amb=null;} }catch(e){} },
+  chaseNote(i){ const seq=[110,110,131,110,104,110,139,131]; this.tone(seq[i%8],seq[i%8],.11,'square',.11); if(i%2===0)this.tone(55,55,.1,'sine',.16); },
+};
+// ============================================================ INNTAK (lyklaborð + snertiskjár)
+const keys=new Set(), pressed=new Set();
+const BIND=[
+  {up:'KeyW',down:'KeyS',left:'KeyA',right:'KeyD',sprint:'ShiftLeft',act:'KeyE',flash:'KeyF',pan:'KeyQ'},
+  {up:'ArrowUp',down:'ArrowDown',left:'ArrowLeft',right:'ArrowRight',sprint:'ShiftRight',act:'Enter',flash:'Period',pan:'Comma'},
+];
+const TC={on:false,vx:0,vy:0,sprint:false,act:false,flash:false,pan:false}; // snertistýring (spilari 1)
+addEventListener('keydown',e=>{
+  if(['Tab','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code)) e.preventDefault();
+  if(!e.repeat){ keys.add(e.code); pressed.add(e.code); globalKey(e.code); }
+});
+addEventListener('keyup',e=>keys.delete(e.code));
+addEventListener('blur',()=>keys.clear());
+addEventListener('pointerdown',()=>A.init(),{passive:true});
+
+// ============================================================ HÓTELIÐ — kortagerð
+const MW=76, MH=52;
+const F={WALL:0,HALL:1,ROOM:2,LOBBY:3,WATER:4,CELLAR:5,KITCH:6,BATH:7,GYM:8,BOILER:9,DECK:10,BALL:11,LAUN:12,LIB:13,DINE:14,STORE:15,OFFICE:16};
+const gi=(x,y)=>y*MW+x;
+let grid,doorGrid,propGrid,explored;
+let doors=[],props=[],pickups=[],lights=[],rooms=[];
+let exitDoor=null, lockDoors={}, keyPos={};
+const spawnPts=[[36.5,41.5],[39.5,41.5],[36.5,46.5],[39.5,46.5]]; let monSpawn=[67.5,46.5];
+
+function carve(x0,y0,x1,y1,t){ for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++) grid[gi(x,y)]=t; }
+function addRoom(x0,y0,x1,y1,t,name){ carve(x0,y0,x1,y1,t); rooms.push({x0,y0,x1,y1,name}); }
+function addDoor(x,y,horiz,lock){
+  grid[gi(x,y)]=F.HALL;
+  const d={x,y,horiz,lock:lock||null,locked:!!lock,open:false,exit:false};
+  doorGrid[gi(x,y)]=doors.length; doors.push(d);
+  if(lock&&lock!=='gold') lockDoors[lock]=d;
+  return d;
+}
+function addProp(type,x,y,w,h,extra){
+  w=w||1;h=h||1;
+  const p=Object.assign({type,x,y,w,h,solid:true,hide:(type==='closet'||type==='bed'),occ:null},extra||{});
+  const i=props.length; props.push(p);
+  for(let yy=y;yy<y+h;yy++)for(let xx=x;xx<x+w;xx++) propGrid[gi(xx,yy)]=i;
+  return p;
+}
+function pk(kind,x,y,extra){ pickups.push(Object.assign({kind,x,y,taken:false,bob:Math.random()*6},extra||{})); }
+function light(x,y,r,col,fl){ lights.push({x,y,r,col:col||'#ffd9a0',fl:(fl===undefined?1:fl),ph:Math.random()*7}); }
+
+const NOTES=[
+  'Húsvörðurinn heyrir hlaupandi fótatak. Læddu þér…',
+  'Skáparnir eru vinir þínir. Hann opnar þá ekki… oftast.',
+  'Ég faldi bláa lykilinn í rauða herberginu. Fyrirgefðu.',
+  'Hann fer ALDREI ofan í sundlaugina. Treystu mér.',
+  'Gulllykillinn er á skrifstofunni. Taktu hann og HLAUPTU.',
+  'Herbergisþernan hvarf á þriðjudegi. Enginn þorir að þrífa lengur.',
+];
+
+function buildMap(){
+  grid=new Uint8Array(MW*MH);
+  doorGrid=new Int16Array(MW*MH).fill(-1);
+  propGrid=new Int16Array(MW*MH).fill(-1);
+  explored=new Uint8Array(MW*MH);
+  doors=[];props=[];pickups=[];lights=[];rooms=[];lockDoors={};exitDoor=null;
+
+  // ---- gangar
+  carve(2,8,72,11,F.HALL);   // efri gangur
+  carve(2,30,72,33,F.HALL);  // aðalgangur
+  carve(6,8,9,33,F.HALL);    // lóðréttir gangar
+  carve(22,8,25,33,F.HALL);
+  carve(38,8,41,33,F.HALL);
+  carve(54,8,57,33,F.HALL);
+
+  // ---- efri hæð: herbergjaröð (y2..6, hurðir í vegg y7)
+  addRoom(2,2,10,6,F.STORE,'Geymsla');           addDoor(6,7,true);
+  addRoom(12,2,20,6,F.ROOM,'Herbergi 101');      addDoor(16,7,true);
+  addRoom(22,2,30,6,F.ROOM,'Herbergi 102');      addDoor(26,7,true);
+  addRoom(32,2,40,6,F.BATH,'Baðherbergi');       addDoor(36,7,true);
+  addRoom(42,2,50,6,F.ROOM,'Herbergi 103');      addDoor(46,7,true);
+  addRoom(52,2,60,6,F.ROOM,'Herbergi 104');      addDoor(56,7,true,'blue');
+  addRoom(62,2,72,6,F.LIB,'Bókasafn');           addDoor(67,7,true);
+
+  // ---- miðhæð: blokkir milli ganga
+  addRoom(11,13,20,20,F.LAUN,'Þvottahús');       addDoor(10,16,false);
+  addRoom(11,22,20,28,F.ROOM,'Herbergi 201');    addDoor(10,25,false,'red');
+  addRoom(27,13,36,20,F.ROOM,'Herbergi 202');    addDoor(31,12,true);
+  addRoom(27,22,36,28,F.OFFICE,'Skrifstofa');    addDoor(31,29,true,'purple');
+  addRoom(43,13,52,20,F.ROOM,'Herbergi 203');    addDoor(47,12,true);
+  addRoom(43,22,52,28,F.ROOM,'Setustofa');       addDoor(47,29,true);
+  addRoom(59,13,72,20,F.BALL,'Veislusalur');     addDoor(58,16,false);
+  addRoom(59,22,72,28,F.KITCH,'Eldhús');         addDoor(58,25,false);
+
+  // ---- neðri hæð
+  addRoom(28,35,47,49,F.LOBBY,'Anddyri');
+  carve(35,34,40,34,F.LOBBY); // breitt op inn í anddyrið
+  addRoom(2,35,12,41,F.DINE,'Matsalur');         addDoor(7,34,true);
+  addRoom(2,43,12,49,F.CELLAR,'Vínkjallari');    addDoor(7,42,true,'green');
+  addRoom(14,35,26,49,F.DECK,'Sundlaug');        addDoor(20,34,true);
+  carve(16,38,24,46,F.WATER); // laugin sjálf
+  addRoom(49,35,61,49,F.GYM,'Líkamsrækt');       addDoor(55,34,true);
+  addRoom(63,35,72,49,F.BOILER,'Kyndiklefi');    addDoor(68,34,true);
+
+  // ---- útgangurinn (gull, 4 reitir)
+  for(let x=36;x<=39;x++){ grid[gi(x,50)]=F.LOBBY; }
+  exitDoor={x:36,y:50,w:4,horiz:true,lock:'gold',locked:true,open:false,exit:true};
+  for(let x=36;x<=39;x++) doorGrid[gi(x,50)]=doors.length;
+  doors.push(exitDoor); lockDoors.gold=exitDoor;
+
+  // ---- húsgögn og felustaðir
+  // Geymsla
+  addProp('closet',2,2); addProp('crate',8,2); addProp('crate',9,2); addProp('crate',2,6);
+  pk('pan',4.5,4.5); pk('coin',5.5,5.5);
+  // 101
+  addProp('bed',13,2,2,3); addProp('night',15,2); addProp('wardrobe',18,2,2,1,{outfit:1});
+  pk('coin',17.5,4.5); pk('coin',13.5,5.5);
+  // 102
+  addProp('bed',23,2,2,3); addProp('closet',30,2); addProp('plant',22,6);
+  pk('note',27.5,3.5,{text:NOTES[0]}); pk('coin',25.5,5.5);
+  // Bað
+  addProp('tub',33,2,2,1); addProp('sink',39,2); addProp('closet',32,6);
+  pk('note',36.5,3.5,{text:NOTES[1]}); pk('coin',38.5,5.5);
+  // 103
+  addProp('bed',43,2,2,3); addProp('night',45,2); addProp('closet',50,2); addProp('plant',42,6);
+  pk('coin',48.5,4.5);
+  // 104 (BLÁ læst) — græni lykillinn
+  addProp('bed',53,2,2,3); addProp('closet',60,2);
+  pk('coin',54.5,5.5); pk('coin',58.5,5.5); pk('coin',59.5,3.5); pk('coin',55.5,3.5); pk('coin',58.5,2.5);
+  // Bókasafn
+  addProp('shelf',64,3,4,1); addProp('shelf',64,5,4,1); addProp('wardrobe',71,2,2,1,{outfit:2});
+  pk('note',69.5,4.5,{text:NOTES[2]}); pk('coin',62.5,6.5); pk('coin',70.5,6.5);
+  // Þvottahús
+  addProp('washer',12,13); addProp('washer',14,13); addProp('washer',16,13); addProp('closet',20,13); addProp('crate',11,20);
+  pk('coin',18.5,18.5);
+  // Herbergi 201 (RAUÐ læst) — blái lykillinn
+  addProp('closet',20,22); addProp('crate',11,28);
+  pk('coin',12.5,23.5); pk('coin',18.5,27.5); pk('coin',19.5,23.5); pk('coin',12.5,27.5); pk('coin',17.5,24.5);
+  // 202
+  addProp('bed',28,13,2,3); addProp('closet',36,13);
+  pk('note',32.5,17.5,{text:NOTES[5]}); pk('coin',34.5,19.5); pk('coin',28.5,19.5);
+  // Skrifstofa (FJÓLUBLÁ læst) — gulllykillinn
+  addProp('desk',30,24,2,1); addProp('plant',27,22); addProp('plant',36,28);
+  pk('note',34.5,24.5,{text:NOTES[4]});
+  pk('coin',28.5,23.5); pk('coin',35.5,23.5); pk('coin',28.5,27.5); pk('coin',35.5,27.5); pk('coin',33.5,27.5); pk('coin',29.5,25.5);
+  // 203
+  addProp('bed',44,13,2,3); addProp('wardrobe',51,13,2,1,{outfit:4});
+  pk('coin',49.5,18.5);
+  // Setustofa
+  addProp('tv',43,25); addProp('sofa',45,25,2,1); addProp('plant',52,22); addProp('closet',52,28);
+  pk('coin',49.5,26.5); pk('coin',46.5,23.5);
+  // Veislusalur
+  addProp('table',61,15,2,2); addProp('table',66,15,2,2); addProp('table',63,18,2,2);
+  addProp('plant',59,13); addProp('plant',72,13); addProp('plant',59,20); addProp('plant',72,20);
+  addProp('wardrobe',64,13,2,1,{outfit:3});
+  pk('coin',60.5,14.5); pk('coin',69.5,14.5); pk('coin',60.5,19.5); pk('coin',69.5,19.5); pk('coin',64.5,17.5);
+  // Eldhús
+  addProp('counter',60,22,7,1); addProp('stove',67,22); addProp('fridge',72,22); addProp('crate',59,28);
+  addProp('wardrobe',70,28,2,1,{outfit:5});
+  pk('pan',62.5,23.5); pk('coin',65.5,26.5); pk('coin',61.5,27.5);
+  // Anddyri
+  addProp('desk',34,44,3,1,{recep:true});
+  addProp('sofa',30,38,2,1); addProp('sofa',42,38,2,1);
+  addProp('plant',28,35); addProp('plant',47,35); addProp('plant',28,48); addProp('plant',47,48);
+  addProp('closet',47,42);
+  pk('flash',30.5,40.3);
+  pk('coin',33.5,37.5); pk('coin',42.5,46.5); pk('coin',29.5,44.5);
+  // Matsalur
+  addProp('table',4,37,2,2); addProp('table',8,37,2,2); addProp('plant',2,35); addProp('plant',12,35);
+  pk('flash',11.5,40.4); pk('coin',3.5,40.5); pk('coin',11.5,36.5);
+  // Vínkjallari (GRÆN læst) — fjólublái lykillinn
+  addProp('crate',3,48); addProp('crate',4,48); addProp('crate',11,48); addProp('shelf',2,43); addProp('shelf',12,43);
+  pk('choc',3.5,44.5);
+  pk('coin',5.5,44.5); pk('coin',9.5,44.5); pk('coin',10.5,47.5); pk('coin',6.5,47.5);
+  // Sundlaug
+  addProp('wardrobe',14,35,2,1,{outfit:6}); addProp('closet',26,35);
+  pk('choc',15.5,47.5); pk('coin',25.5,37.5); pk('coin',15.5,42.5); pk('coin',25.5,44.5);
+  // Líkamsrækt
+  addProp('weight',50,37); addProp('weight',52,37); addProp('weight',50,39); addProp('weight',52,39);
+  addProp('bench',57,44,2,1); addProp('closet',61,35);
+  pk('note',55.5,40.5,{text:NOTES[3]}); pk('coin',60.5,48.5); pk('coin',49.5,48.5); pk('coin',59.5,37.5);
+  // Kyndiklefi
+  addProp('boiler',66,41,2,2); addProp('crate',72,35); addProp('crate',72,36); addProp('crate',63,49); addProp('crate',72,49);
+  pk('coin',64.5,47.5); pk('coin',71.5,46.5); pk('coin',64.5,37.5);
+  // plöntur á göngum
+  [[2,30],[13,33],[28,30],[45,33],[60,30],[72,33],[2,11],[13,8],[28,11],[45,8],[60,11],[72,8]].forEach(p=>addProp('plant',p[0],p[1]));
+  // peningar á göngum
+  [[4.5,31.5],[11.5,31.5],[18.5,32.5],[30.5,31.5],[43.5,32.5],[50.5,31.5],[63.5,31.5],[70.5,32.5],
+   [4.5,9.5],[14.5,10.5],[29.5,9.5],[43.5,10.5],[52.5,9.5],[65.5,10.5],
+   [7.5,14.5],[7.5,27.5],[23.5,20.5],[39.5,15.5],[39.5,26.5],[55.5,20.5]].forEach(p=>pk('coin',p[0],p[1]));
+
+  // ---- ljós
+  [[8,31],[18,31],[28,31],[38,31],[48,31],[58,31],[68,31],
+   [8,10],[18,10],[28,10],[38,10],[48,10],[58,10],[68,10],
+   [7.5,20],[23.5,20],[39.5,20],[55.5,20]].forEach(p=>light(p[0],p[1],4,'#ffd9a0',1));
+  rooms.forEach(r=>{ if(r.name!=='Anddyri') light((r.x0+r.x1)/2+.5,(r.y0+r.y1)/2+.5,Math.min(4.5,Math.max(2.6,Math.min(r.x1-r.x0,r.y1-r.y0)*.6)),'#e8d5b0',1); });
+  light(37.5,41.5,7.5,'#ffe2b0',1);           // ljósakróna anddyris
+  light(67,42,4.5,'#ff7040',2);               // kyndiklefinn (rautt flökt)
+  light(37.5,49.5,3,'#ffe08a',0.5);           // útgangurinn
+
+  // ---- slembnir lyklastaðir og búningastokkun (v2, GPT-rýni)
+  const pick=a=>a[(rnd()*a.length)|0];
+  const ks={};
+  KEYORD.forEach(k=>{ ks[k]=pick(KEYSPOTS[k]); pk('key',ks[k][0],ks[k][1],{col:k}); });
+  const wds=props.filter(pr=>pr.outfit), oids=wds.map(pr=>pr.outfit);
+  for(let i=oids.length-1;i>0;i--){ const j=(rnd()*(i+1))|0; const tmp=oids[i]; oids[i]=oids[j]; oids[j]=tmp; }
+  wds.forEach((pr,i)=>{ pr.outfit=oids[i]; });
+  // ---- markmiðastaðir
+  keyPos={redKey:ks.red,redDoor:[10.5,25.5],blueKey:ks.blue,blueDoor:[56.5,7.5],
+    greenKey:ks.green,greenDoor:[7.5,42.5],purpleKey:ks.purple,purpleDoor:[31.5,29.5],
+    goldKey:ks.gold,exit:[37.5,49.5]};
+}
+
+// ============================================================ ÁREKSTRAR, SJÓNLÍNA, LEIÐARLEIT
+function tileAt(x,y){ if(x<0||y<0||x>=MW||y>=MH) return F.WALL; return grid[gi(x,y)]; }
+function doorAt(x,y){ if(x<0||y<0||x>=MW||y>=MH) return null; const i=doorGrid[gi(x,y)]; return i>=0?doors[i]:null; }
+function blockedMove(x,y,mon){
+  if(x<1||y<1||x>=MW-1||y>=MH-1) return true;
+  const g=grid[gi(x,y)]; if(g===F.WALL) return true;
+  if(mon&&g===F.WATER) return true;
+  const pi=propGrid[gi(x,y)]; if(pi>=0&&props[pi].solid) return true;
+  const d=doorAt(x,y); if(d&&!d.open) return true;
+  return false;
+}
+function blockedPath(x,y){ // BFS skrímslisins: lokuð ólæst hurð er í lagi (hann opnar)
+  if(x<1||y<1||x>=MW-1||y>=MH-1) return true;
+  const g=grid[gi(x,y)]; if(g===F.WALL||g===F.WATER) return true;
+  const pi=propGrid[gi(x,y)]; if(pi>=0&&props[pi].solid) return true;
+  const d=doorAt(x,y); if(d&&!d.open&&d.locked) return true;
+  return false;
+}
+function sightBlocked(x,y){ const g=tileAt(x,y); if(g===F.WALL) return true; const d=doorAt(x,y); return !!(d&&!d.open); }
+function los(x0,y0,x1,y1){
+  const D=dist(x0,y0,x1,y1), n=Math.max(2,Math.ceil(D*3));
+  for(let i=1;i<n;i++){ const t=i/n, x=Math.floor(lerp(x0,x1,t)), y=Math.floor(lerp(y0,y1,t)); if(sightBlocked(x,y)) return false; }
+  return true;
+}
+function circleFree(x,y,r,mon){
+  const x0=Math.floor(x-r),x1=Math.floor(x+r),y0=Math.floor(y-r),y1=Math.floor(y+r);
+  for(let ty=y0;ty<=y1;ty++)for(let tx=x0;tx<=x1;tx++) if(blockedMove(tx,ty,mon)) return false;
+  return true;
+}
+function slideMove(e,dx,dy,r,mon){
+  if(dx&&circleFree(e.x+dx,e.y,r,mon)) e.x+=dx;
+  if(dy&&circleFree(e.x,e.y+dy,r,mon)) e.y+=dy;
+}
+const bfsPrev=new Int32Array(MW*MH);
+function bfs(sx,sy,tx,ty){
+  sx=clamp(sx,1,MW-2);sy=clamp(sy,1,MH-2);tx=clamp(tx,1,MW-2);ty=clamp(ty,1,MH-2);
+  if(blockedPath(tx,ty)){
+    let best=null,bd=1e9;
+    for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){
+      const nx=tx+dx,ny=ty+dy;
+      if(!blockedPath(nx,ny)){ const dd=dx*dx+dy*dy; if(dd<bd){bd=dd;best=[nx,ny];} }
+    }
+    if(!best) return null; tx=best[0]; ty=best[1];
+  }
+  bfsPrev.fill(-1);
+  const start=gi(sx,sy), tgt=gi(tx,ty);
+  bfsPrev[start]=start;
+  const q=[start]; let qi=0;
+  while(qi<q.length){
+    const cur=q[qi++]; if(cur===tgt) break;
+    const cx=cur%MW, cy=(cur/MW)|0;
+    if(!blockedPath(cx+1,cy)&&bfsPrev[cur+1]<0){bfsPrev[cur+1]=cur;q.push(cur+1);}
+    if(!blockedPath(cx-1,cy)&&bfsPrev[cur-1]<0){bfsPrev[cur-1]=cur;q.push(cur-1);}
+    if(!blockedPath(cx,cy+1)&&bfsPrev[cur+MW]<0){bfsPrev[cur+MW]=cur;q.push(cur+MW);}
+    if(!blockedPath(cx,cy-1)&&bfsPrev[cur-MW]<0){bfsPrev[cur-MW]=cur;q.push(cur-MW);}
+  }
+  if(bfsPrev[tgt]<0) return null;
+  const path=[]; let c=tgt;
+  while(c!==start){ path.push([c%MW+.5,((c/MW)|0)+.5]); c=bfsPrev[c]; if(path.length>4000) break; }
+  path.reverse(); return path;
+}
+// ============================================================ LEIKSTAÐA & LEIKMENN
+const G={mode:'menu',np:1,diff:1,soft:false,seed:0,nextSeed:null,online:false,paused:false,map:false,over:false,won:false,
+  time:0,score:0,coins:0,notes:0,outfitsFound:0,
+  keys:{red:false,blue:false,green:false,purple:false,gold:false},
+  msgs:[],parts:[],scare:0,shake:0,grace:0,intro:0,flashFx:0,flashP:null,spotFx:0,
+  lightning:0,lightT:7,heartT:0,chaseI:0,chaseT:0,exploreT:0,endT:0,best:0,
+  blackout:0,flicker:0,eventT:0,eventPool:[],stuckT:0,lastObj:'',
+  usedSprint:false,gotHit:false,panHits:0,newAchs:[]};
+let players=[], mon=null, corrTiles=[], roomCenters=[];
+const activePlayers=()=>players.filter(p=>!G.online||p.netConnected!==false);
+
+try{ G.best=parseInt(localStorage.getItem('salka_best')||'0',10)||0; }catch(e){}
+
+const hasPerk=(p,k)=>OUTFITS[p.outfit].perk===k;
+const keysCount=()=>Object.values(G.keys).filter(Boolean).length;
+
+function makePlayer(i){
+  const hpMax=G.diff===2?1:3;
+  return {i,x:spawnPts[i][0],y:spawnPts[i][1],dir:Math.PI/2,hp:hpMax,hpMax,stam:1,
+    hidden:null,downed:false,rev:0,invuln:0,flash:false,fcd:0,pan:0,swing:0,
+    outfit:0,owned:[0],cam:{x:spawnPts[i][0],y:spawnPts[i][1]},stepT:0,moving:false,sprinting:false,inWater:false,
+    breath:1,cold:0,coldWarn:false,gpx:0,gpy:0,gpSprint:false,pad:null,
+    netId:null,netName:'Spilari '+(i+1),netConnected:true,netLast:{act:0,flash:0,pan:0}};
+}
+function makeMonster(){
+  return {x:monSpawn[0],y:monSpawn[1],dir:0,state:'patrol',path:null,pi:0,target:null,
+    repath:0,stun:0,fear:0,openT:0,openDoor:null,seen:null,seenP:null,seenT:0,searchT:0,invPause:0,yank:null,think:0,wob:0};
+}
+
+function toast(t,col,big){
+  G.msgs.push({t,col:col||'#fff',big:!!big,life:big?3.6:2.8,age:0}); if(G.msgs.length>4)G.msgs.shift();
+  if(G.online&&NET.active&&NET.host&&!NET.receiving) NET.send({type:'broadcast',payload:{type:'notice',text:t,col:col||'#fff',big:!!big}});
+}
+function puff(x,y,col,n,spd){ for(let i=0;i<(n||10);i++){ const a=Math.random()*Math.PI*2,s=(spd||2)*(.4+Math.random()); G.parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:.5+Math.random()*.5,age:0,col:col||'#ccc',r:.09+Math.random()*.12}); } }
+
+let noteTimer=null;
+function showNote(text){
+  const el=document.getElementById('note');
+  el.textContent=text; el.classList.remove('hidden');
+  A.paper();
+  clearTimeout(noteTimer); noteTimer=setTimeout(()=>el.classList.add('hidden'),4500);
+}
+
+// ============================================================ SAMSKIPTI (E-takkinn)
+function propCenter(p){ return [p.x+p.w/2,p.y+p.h/2]; }
+function interact(p){
+  if(p.hidden){ exitHide(p); return; }
+  if(G.online){
+    const fallen=players.find(q=>q!==p&&q.netConnected!==false&&q.downed&&dist(p.x,p.y,q.x,q.y)<1.65);
+    if(fallen){ fallen.downed=false; fallen.hp=1; fallen.rev=0; fallen.invuln=3;
+      toast('❤ '+fallen.netName+' er komin(n) aftur!','#8f8',true); A.win(); return; }
+  }
+  let best=null,bd=1.45;
+  for(const pr of props){
+    if(!(pr.hide||pr.outfit))continue;
+    const c=propCenter(pr), d=dist(p.x,p.y,c[0],c[1])-Math.max(pr.w,pr.h)*.25;
+    if(d<bd){ bd=d; best={kind:pr.outfit?'wardrobe':'hide',pr}; }
+  }
+  for(const d of doors){
+    const cx=d.exit?d.x+d.w/2:d.x+.5, cy=d.y+.5;
+    const dd=dist(p.x,p.y,cx,cy);
+    if(dd<bd){ bd=dd; best={kind:'door',d}; }
+  }
+  if(!best)return;
+  if(best.kind==='door'){
+    const d=best.d;
+    if(d.locked){
+      if(G.keys[d.lock]){
+        d.locked=false; d.open=true; A.unlock();
+        if(d.exit){ toast('🔓 ÚTGANGURINN ER OPINN — FLÝÐU!','#f4c542',true); }
+        else toast('🔓 Hurðin opnuð!','#9f9');
+        puff(d.exit?d.x+d.w/2:d.x+.5,d.y+.5,KEYCOL[d.lock],14,2.5);
+      } else { A.deny(); toast('🔒 Læst! Þig vantar '+KEYNAME[d.lock],KEYCOL[d.lock]); }
+    } else { d.open=!d.open; A.creak(); }
+  } else if(best.kind==='hide'){
+    if(!best.pr.occ) enterHide(p,best.pr);
+  } else if(best.kind==='wardrobe'){
+    outfitAction(p,best.pr);
+  }
+}
+function enterHide(p,pr){
+  const c=propCenter(pr);
+  const seenNow = mon && G.grace<=0 && dist(mon.x,mon.y,p.x,p.y)<8.5 && los(mon.x,mon.y,p.x,p.y);
+  p.hidden=pr; pr.occ=p; p.px=p.x; p.py=p.y; p.x=c[0]; p.y=c[1];
+  A.whoosh();
+  if(seenNow){ mon.yank=pr; mon.state='invest'; mon.target=[c[0],c[1]]; mon.path=null; toast('⚠️ HANN SÁ ÞIG FELA ÞIG!','#ff5a5a',true); A.growl(); }
+  else toast(pr.type==='bed'?'Þú felur þig undir rúminu… 🤫':'Þú felur þig í skápnum… 🤫','#9ad');
+}
+function exitHide(p){
+  const pr=p.hidden; if(!pr)return;
+  const c=propCenter(pr);
+  const spots=[[c[0],pr.y+pr.h+.55],[c[0],pr.y-.55],[pr.x-.55,c[1]],[pr.x+pr.w+.55,c[1]]];
+  let out=spots.find(s=>circleFree(s[0],s[1],.32,false));
+  if(!out) out=[p.px||c[0],p.py||c[1]];
+  p.x=out[0]; p.y=out[1]; p.hidden=null; pr.occ=null; A.whoosh();
+}
+function outfitAction(p,pr){
+  if(pr.outfit && !p.owned.includes(pr.outfit)){
+    p.owned.push(pr.outfit); p.outfit=pr.outfit; G.score+=50; G.outfitsFound++;
+    if(!collOutfits.includes(pr.outfit)){
+      collOutfits.push(pr.outfit); PERS.set('salka_outfits',collOutfits);
+      if(collOutfits.length>=6) grantAch('safnari');
+    }
+    const o=OUTFITS[pr.outfit];
+    A.cloth(); toast('👕 NÝR BÚNINGUR: '+o.n+' — '+o.d+' (+50)','#ffd76a',true);
+    puff(p.x,p.y,o.c,12,2);
+  } else {
+    const i=p.owned.indexOf(p.outfit), nx=p.owned[(i+1)%p.owned.length];
+    p.outfit=nx; A.cloth();
+    toast('👕 Þú klæddist: '+OUTFITS[nx].n+' — '+OUTFITS[nx].d,'#cdf');
+    puff(p.x,p.y,OUTFITS[nx].c,8,1.6);
+  }
+}
+function doFlash(p){
+  if(!p.flash){ A.fizzle(); return; }
+  if(p.fcd>0){ A.fizzle(); return; }
+  p.fcd=8; G.flashFx=.28; G.flashP=p;
+  const a=Math.atan2(mon.y-p.y,mon.x-p.x);
+  if(dist(p.x,p.y,mon.x,mon.y)<8.5 && Math.abs(angDiff(p.dir,a))<.7 && los(p.x,p.y,mon.x,mon.y) && G.grace<=0){
+    mon.stun=2.6; mon.state='stun'; mon.path=null;
+    A.zap(); toast('⚡ BLOSSI! Hann er dasaður!','#aef',true);
+    puff(mon.x,mon.y,'#cfe9ff',16,3);
+  } else A.zap();
+}
+function doPan(p){
+  if(p.pan<=0||p.swing>0){ if(p.pan<=0)A.fizzle(); return; }
+  p.swing=.3; A.whoosh();
+  const a=Math.atan2(mon.y-p.y,mon.x-p.x);
+  if(dist(p.x,p.y,mon.x,mon.y)<1.9 && Math.abs(angDiff(p.dir,a))<1.25 && G.grace<=0){
+    mon.fear=5; mon.state='fear'; mon.path=null; mon.stun=Math.max(mon.stun,.3);
+    for(let i=0;i<12;i++){ if(circleFree(mon.x+Math.cos(a)*.25,mon.y+Math.sin(a)*.25,.4,true)){ mon.x+=Math.cos(a)*.25; mon.y+=Math.sin(a)*.25; } }
+    G.score+=25; p.pan--; G.panHits++;
+    A.clang(); G.shake=.5; toast('🍳 BAMM! Hann flýr! +25','#ffd76a',true);
+    puff(mon.x,mon.y,'#333',16,3);
+    if(p.pan<=0){ A.brk(); toast('Pannan brotnaði! 💔','#f88'); }
+  }
+}
+
+// ============================================================ SAFNHLUTIR
+function collect(p,it){
+  it.taken=true;
+  if(it.kind==='coin'){ const v=hasPerk(p,'gold')?20:10; G.coins++; G.score+=v; A.coin(); puff(it.x,it.y,'#f4c542',5,1.5); }
+  else if(it.kind==='key'){ G.keys[it.col]=true; G.score+=KEYPTS[it.col]; A.key();
+    toast('🗝️ '+KEYNAME[it.col]+'! +'+KEYPTS[it.col],KEYCOL[it.col],true); puff(it.x,it.y,KEYCOL[it.col],16,2.5); }
+  else if(it.kind==='flash'){ p.flash=true; A.eat(); toast('🔦 Vasaljós! Blossi = '+(p.i?'punktur (.)':'F'),'#aef',true); }
+  else if(it.kind==='pan'){ p.pan=hasPerk(p,'chef')?8:4; A.clang(); toast('🍳 Steikarpanna! Sveifla = '+(p.i?'komma (,)':'Q'),'#fc6',true); }
+  else if(it.kind==='choc'){ if(p.hp<p.hpMax){p.hp++;toast('🍫 Súkkulaði! +1 ❤','#f9a');} else {G.score+=30;toast('🍫 Súkkulaði! +30 stig','#f9a');} A.eat(); }
+  else if(it.kind==='note'){ G.score+=10; G.notes++;
+    if(G.online&&NET.host&&p.i!==NET.slot) NET.send({type:'target',slot:p.i,payload:{type:'note',text:it.text}});
+    else showNote(it.text);
+  }
+}
+
+// ============================================================ LEIKMANNA-UPPFÆRSLA
+function updatePlayer(p,dt){
+  if(p.downed){
+    if(G.online){p.rev=0;p.moving=false;p.sprinting=false;return;}
+    const other=players[1-p.i];
+    const near=other&&!other.downed&&dist(p.x,p.y,other.x,other.y)<1.6&&keys.has(BIND[other.i].act);
+    if(near){ p.rev+=dt; if(p.rev>=1.5){ p.downed=false; p.hp=1; p.rev=0; p.invuln=3; toast('❤ SPILARI '+(p.i+1)+' ER KOMINN AFTUR!','#8f8',true); A.win(); } }
+    else p.rev=Math.max(0,p.rev-dt*1.5);
+    return;
+  }
+  p.invuln-=dt; p.fcd-=dt; p.swing-=dt;
+  const guestLocal=G.online&&NET.active&&!NET.host&&p.i===NET.slot;
+  const b=BIND[G.online?0:p.i]||BIND[0];
+  let ix=0,iy=0,inputPower=1,analogInput=false;
+  if(keys.has(b.up))iy-=1; if(keys.has(b.down))iy+=1;
+  if(keys.has(b.left))ix-=1; if(keys.has(b.right))ix+=1;
+  let sprint=keys.has(b.sprint);
+  let act=pressed.has(b.act), flashP=pressed.has(b.flash), panP=pressed.has(b.pan);
+
+  // v2.1: snertipinni og fjarstýring halda raunverulegum styrk hreyfingarinnar.
+  // Áður var jafnvel örlítil snertihreyfing jöfnuð upp í fullan hraða.
+  const touchMag=(p.i===0&&TC.on)?Math.hypot(TC.vx,TC.vy):0;
+  const padMag=Math.hypot(p.gpx||0,p.gpy||0);
+  if(touchMag>.001){
+    ix=TC.vx; iy=TC.vy; inputPower=clamp(touchMag,0,1); analogInput=true;
+  } else if(padMag>.001){
+    ix=p.gpx; iy=p.gpy; inputPower=clamp(padMag,0,1); analogInput=true;
+  }
+  if(p.i===0&&TC.on){
+    sprint=sprint||TC.sprint;
+    if(TC.act){act=true;TC.act=false;}
+    if(TC.flash){flashP=true;TC.flash=false;}
+    if(TC.pan){panP=true;TC.pan=false;}
+  }
+  sprint=sprint||p.gpSprint;
+  if(p.hidden){
+    if(act){ if(guestLocal)NET.queueAction('act'); else exitHide(p); }
+    else if(!guestLocal){
+      // v2: andardrátturinn klárast ef hann er nálægt
+      const near=G.grace<=0&&dist(mon.x,mon.y,p.x,p.y)<7;
+      if(near) p.breath-=dt/7; else p.breath=Math.min(1,p.breath+dt/4);
+      if(p.breath<=0){ p.breath=.6; toast('😨 Hann heyrði andardráttinn þinn!','#ff7a7a',true); hitPlayer(p); }
+    }
+    p.moving=false; p.sprinting=false;
+  } else {
+    p.breath=Math.min(1,p.breath+dt*.5);
+    const mag=Math.hypot(ix,iy);
+    p.inWater=tileAt(Math.floor(p.x),Math.floor(p.y))===F.WATER;
+    // v2: kuldi í lauginni — griðastaðurinn er ekki ókeypis
+    if(p.inWater) p.cold=Math.min(1,p.cold+dt/(hasPerk(p,'swim')?20:10));
+    else { p.cold=Math.max(0,p.cold-dt/3); if(p.cold<.5)p.coldWarn=false; }
+    if(p.cold>=1&&!p.coldWarn){ p.coldWarn=true; toast('🥶 Þér er ískalt! Farðu upp úr lauginni!','#9cf',true); }
+    if(mag>.001){
+      ix/=mag; iy/=mag;
+      const movePower=analogInput?inputPower:1;
+      p.dir=Math.atan2(iy,ix);
+      const wmul=p.inWater?(hasPerk(p,'swim')?1:.5):1;
+      // Hlaup virkist aðeins þegar pinna er ýtt nægilega langt út.
+      const sp=sprint&&p.stam>0&&movePower>.52;
+      const spd=4.3*(hasPerk(p,'speed')?1.15:1)*(sp?1.5:1)*wmul*(1-.45*p.cold)*movePower;
+      slideMove(p,ix*spd*dt,iy*spd*dt,.32,false);
+      p.sprinting=sp;
+      if(sp)G.usedSprint=true;
+      p.stepT+=dt*spd;
+      if(p.stepT>1.7){ p.stepT=0; p.inWater?A.splash():A.step(); if(p.inWater)puff(p.x,p.y,'#7fd4e8',3,1); }
+    } else p.sprinting=false;
+    p.moving=mag>.001;
+    if(p.sprinting&&p.moving) p.stam=Math.max(0,p.stam-.30*dt);
+    else p.stam=Math.min(1,p.stam+.26*dt);
+    if(act){ if(guestLocal)NET.queueAction('act'); else interact(p); }
+    if(flashP){ if(guestLocal)NET.queueAction('flash'); else doFlash(p); }
+    if(panP){ if(guestLocal)NET.queueAction('pan'); else doPan(p); }
+  }
+  p.cam.x=lerp(p.cam.x,p.x,Math.min(1,dt*6));
+  p.cam.y=lerp(p.cam.y,p.y,Math.min(1,dt*6));
+}
+
+// ============================================================ HÚSVÖRÐURINN (skrímslið)
+function monSpeed(){ const k=keysCount(); const d=G.diff===2?1:(G.diff===0?-1:0); return {
+  patrol:3.0+.12*k+(d>0?.4:d<0?-.3:0),
+  chase:5.2+.2*k+(d>0?.7:d<0?-.4:0)+(G.keys.gold?.5:0) }; }
+function pickPatrolTarget(){
+  if(G.keys.gold&&Math.random()<.5) return [30+Math.random()*16,36+Math.random()*12]; // reiður: vaktar anddyrið
+  if(Math.random()<.6&&corrTiles.length) { const t=corrTiles[(Math.random()*corrTiles.length)|0]; return [t[0]+.5,t[1]+.5]; }
+  const r=roomCenters[(Math.random()*roomCenters.length)|0]; return [r[0],r[1]];
+}
+function monGoto(t){ mon.target=t; mon.path=bfs(Math.floor(mon.x),Math.floor(mon.y),Math.floor(t[0]),Math.floor(t[1])); mon.pi=0; if(!mon.path)mon.target=null; }
+function followPath(spd,dt){
+  if(!mon.path||mon.pi>=mon.path.length){ return true; }
+  const n=mon.path[mon.pi];
+  const d=doorAt(Math.floor(n[0]),Math.floor(n[1]));
+  if(d&&!d.open&&dist(mon.x,mon.y,n[0],n[1])<1.1){
+    if(!d.locked){ mon.openDoor=d; mon.openT=.9; }
+    else { mon.path=null; return true; }
+    return false;
+  }
+  const dx=n[0]-mon.x, dy=n[1]-mon.y, dd=Math.hypot(dx,dy);
+  if(dd<.25){ mon.pi++; return mon.pi>=mon.path.length; }
+  const vx=dx/dd*spd*dt, vy=dy/dd*spd*dt;
+  mon.x+=vx; mon.y+=vy;
+  mon.dir=Math.atan2(dy,dx);
+  return false;
+}
+function updateMonster(dt){
+  if(G.grace>0){ G.grace-=dt; mon.wob+=dt; return; }
+  mon.wob+=dt;
+  const SP=monSpeed();
+  if(mon.stun>0){ mon.stun-=dt; return; }
+  if(mon.openT>0){
+    mon.openT-=dt;
+    if(mon.openT<=0&&mon.openDoor){ mon.openDoor.open=true; A.creak(); mon.openDoor=null; }
+    return;
+  }
+  // --- sjón
+  let seen=null,seenD=1e9;
+  for(const p of activePlayers()){
+    if(p.hidden||p.downed)continue;
+    const d=dist(mon.x,mon.y,p.x,p.y);
+    let rng=(mon.state==='chase'?12.5:10.5)*(hasPerk(p,'spy')?.72:1)+(G.keys.gold?1.5:0);
+    if(d<rng){
+      const a=Math.abs(angDiff(mon.dir,Math.atan2(p.y-mon.y,p.x-mon.x)));
+      if((a<.95||d<2.2)&&los(mon.x,mon.y,p.x,p.y)){ if(d<seenD){seen=p;seenD=d;} }
+    }
+  }
+  if(seen){
+    mon.seen=[seen.x,seen.y]; mon.seenP=seen;
+    mon.seenT=hasPerk(seen,'ghost')?1.6:3.2;
+    if(mon.state!=='chase'&&mon.state!=='fear'){ mon.state='chase'; mon.repath=0; A.sting(); A.growl(); G.spotFx=1; G.shake=Math.max(G.shake,.4); }
+  } else mon.seenT-=dt;
+  // --- heyrn
+  if(mon.state==='patrol'||mon.state==='search'){
+    for(const p of activePlayers()){
+      if(p.hidden||p.downed)continue;
+      if(p.sprinting&&p.moving&&dist(mon.x,mon.y,p.x,p.y)<7.5){ mon.state='invest'; mon.target=[p.x,p.y]; mon.path=null; break; }
+    }
+  }
+  // --- hegðun
+  if(mon.state==='fear'){
+    mon.fear-=dt;
+    if(!mon.path||mon.pi>=mon.path.length){
+      let bx=null,bd=-1;
+      for(let i=0;i<8;i++){ const t=pickPatrolTarget(); const dd=Math.min(...activePlayers().map(p=>dist(t[0],t[1],p.x,p.y))); if(dd>bd){bd=dd;bx=t;} }
+      monGoto(bx);
+    }
+    followPath(SP.chase*1.15,dt);
+    if(mon.fear<=0){
+      if(mon.retreatAfter){
+        mon.retreatAfter=false;
+        puff(mon.x,mon.y,'#111',18,3);
+        for(let i=0;i<80;i++){
+          const t2=corrTiles[(Math.random()*corrTiles.length)|0];
+          if(Math.min(...activePlayers().map(q=>dist(t2[0]+.5,t2[1]+.5,q.x,q.y)))>18){ mon.x=t2[0]+.5; mon.y=t2[1]+.5; break; }
+        }
+      }
+      mon.state='patrol'; mon.path=null;
+    }
+  } else if(mon.state==='chase'){
+    if(mon.seenT>0&&mon.seenP&&!mon.seenP.hidden&&!mon.seenP.downed){
+      mon.repath-=dt;
+      if(mon.repath<=0){ mon.repath=.32; monGoto([mon.seenP.x,mon.seenP.y]); }
+      followPath(SP.chase,dt);
+    } else {
+      mon.state='search'; mon.searchT=4.2; if(mon.seen)monGoto(mon.seen);
+    }
+  } else if(mon.state==='search'){
+    mon.searchT-=dt;
+    const done=followPath(SP.patrol*1.15,dt);
+    if(done) mon.dir+=dt*2.4; // litast um
+    if(mon.searchT<=0){ mon.state='patrol'; mon.path=null; }
+  } else if(mon.state==='invest'){
+    if(!mon.path&&mon.target) monGoto(mon.target);
+    const done=followPath(SP.patrol*1.25,dt);
+    if(done){
+      if(mon.yank){
+        if(mon.yank.occ){ const v=mon.yank.occ; exitHide(v); hitPlayer(v); }
+        mon.yank=null;
+      }
+      mon.invPause=(mon.invPause||0)+dt;
+      mon.dir+=dt*2;
+      if(mon.invPause>1.4){ mon.invPause=0; mon.state='patrol'; mon.path=null; }
+    }
+  } else { // patrol
+    if(!mon.path||mon.pi>=mon.path.length) monGoto(pickPatrolTarget());
+    followPath(SP.patrol,dt);
+  }
+  // --- grípa
+  for(const p of activePlayers()){
+    if(p.hidden||p.downed||p.invuln>0)continue;
+    if(dist(mon.x,mon.y,p.x,p.y)<.85){ hitPlayer(p); break; }
+  }
+}
+function hitPlayer(p){
+  if(G.over||G.won)return;
+  A.scream(); G.scare=G.soft?.55:.85; G.shake=G.soft?.4:1; G.gotHit=true;
+  if(p.hidden)exitHide(p);
+  p.hp--;
+  // v2 (GPT-rýni): hann hörfar sýnilega inn í myrkrið í stað þess að hverfa á staðnum
+  mon.state='fear'; mon.fear=2.4; mon.path=null; mon.seenT=0; mon.retreatAfter=true;
+  if(p.hp<=0){
+    if(G.online){
+      const other=players.find(q=>q!==p&&q.netConnected!==false&&!q.downed&&q.hp>0);
+      if(other){ p.downed=true; p.rev=0; toast('💀 '+p.netName+' liggur! Komið nær og ýtið á aðgerð til að bjarga.','#ff7a7a',true); }
+      else gameOver();
+    } else if(G.np===2){
+      const other=players[1-p.i];
+      if(other&&!other.downed&&other.hp>0){ p.downed=true; p.rev=0;
+        toast('💀 SPILARI '+(p.i+1)+' LIGGUR! Haltu '+(other.i?'Enter':'E')+' hjá honum til að bjarga!','#ff7a7a',true); }
+      else gameOver();
+    } else gameOver();
+  } else { p.invuln=3; toast('😱 HANN NÁÐI ÞÉR! -1 ❤','#ff7a7a',true); }
+}
+
+// ============================================================ NETSPILUN — Cloudflare Durable Objects + WebSocket
+const NET={
+  active:false,connected:false,host:false,room:'',clientId:'',slot:0,roster:[],ws:null,phase:'idle',
+  receiving:false,reconnects:0,reconnectTimer:null,manualClose:false,lastPlayerSend:0,lastSnapshotSend:0,
+  actionSeq:{act:0,flash:0,pan:0},lastPresence:0,
+  send(msg){ if(this.ws&&this.ws.readyState===WebSocket.OPEN) this.ws.send(JSON.stringify(msg)); },
+  queueAction(k){ this.actionSeq[k]=(this.actionSeq[k]||0)+1; },
+};
+const cleanName=s=>String(s||'').replace(/[<>\u0000-\u001f]/g,'').trim().slice(0,16)||'Gestur';
+const cleanCode=s=>String(s||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6);
+function netStatus(t,kind){ const el=$('netStatus'); el.textContent=t||''; el.className='netStatus '+(kind||''); }
+function netRememberName(){ const n=cleanName($('netName').value); $('netName').value=n; try{localStorage.setItem('salka_net_name',n);}catch(e){} return n; }
+function netWsUrl(code,name,creatorKey,clientId){
+  const u=new URL('/api/rooms/'+code+'/ws',location.href); u.protocol=u.protocol==='https:'?'wss:':'ws:';
+  u.searchParams.set('name',name); if(creatorKey)u.searchParams.set('creatorKey',creatorKey);
+  if(clientId)u.searchParams.set('clientId',clientId); return u.toString();
+}
+async function netCreateRoom(){
+  const name=netRememberName(); netStatus('Stofna herbergi…'); $('netCreate').disabled=true;
+  try{
+    const r=await fetch('/api/rooms',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name})});
+    const d=await r.json(); if(!r.ok)throw new Error(d.error||'Ekki tókst að stofna herbergi.');
+    netConnect(d.code,name,d.creatorKey,'');
+  }catch(e){ netStatus(e.message,'err'); $('netCreate').disabled=false; }
+}
+async function netJoinRoom(){
+  const name=netRememberName(),code=cleanCode($('netCode').value); $('netCode').value=code;
+  if(code.length!==6){netStatus('Sláðu inn sex stafa herbergiskóða.','err');return;}
+  netStatus('Leita að herbergi…'); $('netJoin').disabled=true;
+  try{
+    const r=await fetch('/api/rooms/'+code); const d=await r.json();
+    if(!r.ok)throw new Error(d.error||'Herbergið fannst ekki.');
+    if(d.phase!=='lobby')throw new Error('Leikurinn er þegar hafinn. Aðeins endurtenging er leyfð.');
+    netConnect(code,name,'','');
+  }catch(e){netStatus(e.message,'err');$('netJoin').disabled=false;}
+}
+function netConnect(code,name,creatorKey,clientId){
+  NET.manualClose=false; NET.room=code; NET.phase='connecting'; NET.clientId=clientId||'';
+  netStatus('Tengist '+code+'…');
+  const ws=new WebSocket(netWsUrl(code,name,creatorKey,clientId)); NET.ws=ws;
+  ws.addEventListener('open',()=>{NET.connected=true;NET.reconnects=0;netStatus('Tengt.','ok');});
+  ws.addEventListener('message',e=>{let m;try{m=JSON.parse(e.data);}catch(_){return;}netHandle(m);});
+  ws.addEventListener('close',e=>{
+    NET.connected=false;
+    if(NET.manualClose)return;
+    if(NET.active&&NET.clientId&&NET.reconnects<6){
+      NET.reconnects++; netStatus('Tenging rofnaði — reyni aftur ('+NET.reconnects+'/6)…','err');
+      clearTimeout(NET.reconnectTimer); NET.reconnectTimer=setTimeout(()=>netConnect(NET.room,netRememberName(),'',NET.clientId),900*NET.reconnects);
+    }else if(NET.phase==='connecting'){netStatus(e.reason||'Ekki tókst að tengjast herberginu.','err');$('netCreate').disabled=false;$('netJoin').disabled=false;}
+  });
+  ws.addEventListener('error',()=>netStatus('Netvilla kom upp. Athugaðu kóðann og reyndu aftur.','err'));
+}
+function netHandle(m){
+  if(m.type==='error'){netStatus(m.message||'Netvilla.','err');return;}
+  if(m.type==='welcome'){
+    NET.active=true;NET.connected=true;NET.clientId=m.clientId;NET.slot=m.slot;NET.host=!!m.host;NET.room=m.roomCode;NET.phase=m.phase;NET.roster=m.players||[];
+    try{sessionStorage.setItem('salka_net_session',JSON.stringify({room:NET.room,clientId:NET.clientId,name:netRememberName()}));}catch(e){}
+    $('netSetup').classList.add('hidden');$('netRoom').classList.remove('hidden');$('netRoomCode').textContent=NET.room;
+    netRenderRoster(); netStatus(NET.host?'Þú ert gestgjafi.':'Tengt við herbergið.','ok');
+    if(m.phase==='play'&&m.game)startOnlineGame(m.game);
+  }else if(m.type==='presence'){
+    NET.roster=m.players||[]; NET.host=NET.clientId===m.hostId; netRenderRoster();
+    if(G.online)netSyncRoster();
+  }else if(m.type==='start'){
+    NET.phase='play'; startOnlineGame(m.game);
+  }else if(m.type==='player'&&NET.host){
+    netApplyRemotePlayer(m.slot,m.state,m.actions||{});
+  }else if(m.type==='snapshot'&&!NET.host){
+    netApplySnapshot(m.snapshot);
+  }else if(m.type==='payload'){
+    NET.receiving=true;
+    if(m.payload&&m.payload.type==='notice')toast(m.payload.text,m.payload.col,m.payload.big);
+    else if(m.payload&&m.payload.type==='note')showNote(m.payload.text);
+    NET.receiving=false;
+  }else if(m.type==='pause'){
+    G.paused=!!m.paused; show(G.paused?'pause':null);
+  }else if(m.type==='host_changed'){
+    const was=NET.host;NET.host=NET.clientId===m.hostId;NET.roster=m.players||NET.roster;netRenderRoster();
+    if(NET.host&&!was){toast('👑 Þú tókst við sem gestgjafi.','#f4c542',true);NET.lastSnapshotSend=0;}
+    else if(!NET.host)toast('👑 '+(m.hostName||'Annar leikmaður')+' tók við sem gestgjafi.','#f4c542');
+  }else if(m.type==='room_closed'){
+    netStatus(m.message||'Herberginu var lokað.','err');leaveOnline(false);show('netLobby');
+  }
+}
+function netRenderRoster(){
+  $('netPlayers').innerHTML=NET.roster.sort((a,b)=>a.slot-b.slot).map(p=>'<div class="playerRow '+(p.connected?'':'off')+'"><span>'+(['🔵','🟢','🟣','🟡'][p.slot]||'⚪')+' '+escapeHtml(p.name)+'</span><span>'+(p.id===NET.clientId?'<b class="you">ÞÚ</b> ':'')+(p.host?'<b class="host">GESTGJAFI</b>':'')+(p.connected?'':' · aftengdur')+'</span></div>').join('');
+  const connected=NET.roster.filter(p=>p.connected).length;
+  $('netStart').classList.toggle('hidden',!NET.host);$('netStart').disabled=!NET.host||connected<2;
+  $('netStart').textContent=connected<2?'Bíð eftir öðrum leikmanni…':'▶ Hefja netleik ('+connected+')';
+}
+function escapeHtml(s){return String(s).replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));}
+function netRequestStart(){
+  if(!NET.host)return; const connected=NET.roster.filter(p=>p.connected).length;if(connected<2){netStatus('Að minnsta kosti tveir þurfa að vera tengdir.','err');return;}
+  NET.send({type:'start',game:{seed:10000+Math.floor(Math.random()*89999),diff:G.diff,soft:G.soft}});
+}
+function leaveOnline(showMenu=true){
+  NET.manualClose=true;clearTimeout(NET.reconnectTimer);try{NET.ws&&NET.ws.close(1000,'leave');}catch(e){}
+  NET.active=false;NET.connected=false;NET.host=false;NET.room='';NET.clientId='';NET.roster=[];NET.phase='idle';NET.ws=null;
+  G.online=false;try{sessionStorage.removeItem('salka_net_session');}catch(e){}
+  $('netSetup').classList.remove('hidden');$('netRoom').classList.add('hidden');$('netCreate').disabled=false;$('netJoin').disabled=false;
+  if(showMenu)show('menu');
+}
+function netSyncRoster(){
+  for(const p of players){const r=NET.roster.find(x=>x.slot===p.i);if(r){p.netName=r.name;p.netId=r.id;p.netConnected=r.connected;}else p.netConnected=false;}
+}
+function startOnlineGame(game){
+  A.init();A.startAmb();G.online=true;G.mode='play';G.over=false;G.won=false;G.paused=false;G.map=false;
+  G.diff=clamp(Number(game.diff)||0,0,2);G.soft=!!game.soft;G.time=0;G.score=0;G.coins=0;G.notes=0;G.outfitsFound=0;
+  G.keys={red:false,blue:false,green:false,purple:false,gold:false};G.msgs=[];G.parts=[];G.scare=0;G.shake=0;G.flashFx=0;G.spotFx=0;
+  G.grace=G.diff===2?6:(G.diff===0?11:9);G.intro=4.5;G.endT=0;G.chaseI=0;G.lightT=7;G.seed=Number(game.seed)||12345;G.nextSeed=null;
+  rnd=mulberry(G.seed);monSpawn=MONSTARTS[(rnd()*MONSTARTS.length)|0];
+  const evs=EVENTS.slice();for(let i=evs.length-1;i>0;i--){const j=(rnd()*(i+1))|0;[evs[i],evs[j]]=[evs[j],evs[i]];}
+  G.eventPool=evs.slice(0,3);G.eventT=40+rnd()*30;G.blackout=0;G.flicker=0;G.stuckT=0;G.lastObj='';G.usedSprint=false;G.gotHit=false;G.panHits=0;G.newAchs=[];
+  TC.vx=0;TC.vy=0;TC.sprint=false;TC.act=false;TC.flash=false;TC.pan=false;if(typeof resetJoyVisual==='function')resetJoyVisual();
+  buildMap();buildStatic();corrTiles=[];roomCenters=[];
+  for(let y=0;y<MH;y++)for(let x=0;x<MW;x++)if(grid[gi(x,y)]===F.HALL&&propGrid[gi(x,y)]<0&&doorGrid[gi(x,y)]<0)corrTiles.push([x,y]);
+  rooms.forEach(r=>roomCenters.push([(r.x0+r.x1)/2+.5,(r.y0+r.y1)/2+.5]));
+  const maxSlot=Math.max(0,...NET.roster.map(p=>p.slot));players=[];
+  for(let i=0;i<=maxSlot;i++){const p=makePlayer(i),r=NET.roster.find(x=>x.slot===i);p.netName=r?r.name:'Spilari '+(i+1);p.netId=r?r.id:null;p.netConnected=!!(r&&r.connected);players.push(p);}
+  G.np=players.length;mon=makeMonster();NET.phase='play';NET.lastPlayerSend=0;NET.lastSnapshotSend=0;NET.actionSeq={act:0,flash:0,pan:0};show(null);
+  if(NET.host)toast('Netleikur hafinn — vinnið saman og sleppið út! 🌐','#ffe9a0',true);
+}
+function netPlayerState(p){return{x:p.x,y:p.y,dir:p.dir,stam:p.stam,sprinting:p.sprinting,moving:p.moving,cold:p.cold,breath:p.breath};}
+function netSendLocalPlayer(dt){
+  NET.lastPlayerSend-=dt;if(NET.lastPlayerSend>0||!NET.connected)return;NET.lastPlayerSend=.045;
+  const p=players[NET.slot];if(!p)return;NET.send({type:'player',state:netPlayerState(p),actions:{...NET.actionSeq}});
+}
+function netApplyRemotePlayer(slot,s,a){
+  const p=players[slot];if(!p||slot===NET.slot||!s)return;
+  if(!p.hidden&&Number.isFinite(s.x)&&Number.isFinite(s.y)){
+    const dd=dist(p.x,p.y,s.x,s.y);if(dd<3.2&&circleFree(s.x,s.y,.32,false)){p.x=s.x;p.y=s.y;}
+  }
+  if(Number.isFinite(s.dir))p.dir=s.dir;p.stam=clamp(Number(s.stam)||0,0,1);p.sprinting=!!s.sprinting;p.moving=!!s.moving;p.cold=clamp(Number(s.cold)||0,0,1);
+  for(const k of ['act','flash','pan']){const seq=Number(a[k])||0;if(seq>(p.netLast[k]||0)){p.netLast[k]=seq;if(k==='act')interact(p);else if(k==='flash')doFlash(p);else doPan(p);}}
+}
+function netUpdateRemoteHost(p,dt){p.invuln-=dt;p.fcd-=dt;p.swing-=dt;p.cam.x=lerp(p.cam.x,p.x,Math.min(1,dt*8));p.cam.y=lerp(p.cam.y,p.y,Math.min(1,dt*8));}
+function netSnapshot(){
+  return{g:{time:G.time,score:G.score,coins:G.coins,notes:G.notes,outfitsFound:G.outfitsFound,keys:G.keys,grace:G.grace,intro:G.intro,over:G.over,won:G.won,endT:G.endT,blackout:G.blackout,flicker:G.flicker,stuckT:G.stuckT,lastObj:G.lastObj},
+    players:players.map(p=>({i:p.i,x:p.x,y:p.y,dir:p.dir,hp:p.hp,hpMax:p.hpMax,stam:p.stam,downed:p.downed,rev:p.rev,invuln:p.invuln,flash:p.flash,fcd:p.fcd,pan:p.pan,swing:p.swing,outfit:p.outfit,owned:p.owned,breath:p.breath,cold:p.cold,sprinting:p.sprinting,moving:p.moving,hidden:p.hidden?props.indexOf(p.hidden):-1,netConnected:p.netConnected})),
+    mon:{x:mon.x,y:mon.y,dir:mon.dir,state:mon.state,stun:mon.stun,fear:mon.fear,openT:mon.openT,seen:mon.seen,seenT:mon.seenT,searchT:mon.searchT,invPause:mon.invPause,wob:mon.wob,target:mon.target,retreatAfter:!!mon.retreatAfter},
+    doors:doors.map(d=>[d.open,d.locked]),pickups:pickups.map(i=>i.taken)};
+}
+function netMaybeSnapshot(dt){NET.lastSnapshotSend-=dt;if(NET.lastSnapshotSend>0||!NET.connected)return;NET.lastSnapshotSend=.09;NET.send({type:'snapshot',snapshot:netSnapshot()});}
+function netApplySnapshot(s){
+  if(!s||!players.length)return;const local=players[NET.slot];Object.assign(G,s.g||{});
+  props.forEach(pr=>pr.occ=null);
+  (s.players||[]).forEach(sp=>{const p=players[sp.i];if(!p)return;const isLocal=sp.i===NET.slot,keepCam=p.cam;
+    let nx=sp.x,ny=sp.y;if(isLocal&&!p.hidden){const dd=dist(p.x,p.y,sp.x,sp.y);if(dd<=1.4){nx=lerp(p.x,sp.x,.18);ny=lerp(p.y,sp.y,.18);}}
+    Object.assign(p,sp);p.x=nx;p.y=ny;p.cam=keepCam;p.hidden=sp.hidden>=0?props[sp.hidden]:null;if(p.hidden)p.hidden.occ=p;
+  });
+  if(s.mon){const keepPath=mon.path;Object.assign(mon,s.mon);mon.path=NET.host?keepPath:null;mon.seenP=null;}
+  (s.doors||[]).forEach((v,i)=>{if(doors[i]){doors[i].open=!!v[0];doors[i].locked=!!v[1];}});
+  (s.pickups||[]).forEach((v,i)=>{if(pickups[i])pickups[i].taken=!!v;});
+}
+function updateOnlineGuest(dt){
+  if(G.over||G.won){if(G.endT>0){G.endT-=dt;if(G.endT<=0)showEnd();}netSendLocalPlayer(dt);return;}
+  G.time+=dt;G.intro=Math.max(0,G.intro-dt);G.scare=Math.max(0,G.scare-dt);G.shake=Math.max(0,G.shake-dt*2);G.flashFx=Math.max(0,G.flashFx-dt);G.spotFx=Math.max(0,G.spotFx-dt*.7);
+  const p=players[NET.slot];if(p)updatePlayer(p,dt);netSendLocalPlayer(dt);
+  if(p){G.exploreT-=dt;if(G.exploreT<=0){G.exploreT=.14;const px=Math.floor(p.x),py=Math.floor(p.y);for(let dy=-6;dy<=6;dy++)for(let dx=-6;dx<=6;dx++)if(dx*dx+dy*dy<=40&&px+dx>=0&&py+dy>=0&&px+dx<MW&&py+dy<MH)explored[gi(px+dx,py+dy)]=1;}}
+  if(mon){const md=p?dist(mon.x,mon.y,p.x,p.y):99;if(md<15&&G.grace<=0){G.heartT-=dt;if(G.heartT<=0){A.thump(.22*(1.15-md/15));G.heartT=.42+(md/15);}}if(mon.state==='chase'){G.chaseT-=dt;if(G.chaseT<=0){A.chaseNote(G.chaseI++);G.chaseT=.16;}}}
+  G.msgs.forEach(m=>m.age+=dt);G.msgs=G.msgs.filter(m=>m.age<m.life);G.parts.forEach(q=>{q.age+=dt;q.x+=q.vx*dt;q.y+=q.vy*dt;});G.parts=G.parts.filter(q=>q.age<q.life);
+}
+
+// ============================================================ AÐALUPPFÆRSLA
+function objective(){
+  const k=G.keys;
+  if(!k.red) return {t:'Finndu RAUÐA lykilinn í anddyrinu',p:keyPos.redKey,c:KEYCOL.red};
+  if(lockDoors.red.locked) return {t:'Opnaðu RAUÐU hurðina (Herbergi 201)',p:keyPos.redDoor,c:KEYCOL.red};
+  if(!k.blue) return {t:'Finndu BLÁA lykilinn í Herbergi 201',p:keyPos.blueKey,c:KEYCOL.blue};
+  if(lockDoors.blue.locked) return {t:'Opnaðu BLÁU hurðina (Herbergi 104, uppi)',p:keyPos.blueDoor,c:KEYCOL.blue};
+  if(!k.green) return {t:'Finndu GRÆNA lykilinn í Herbergi 104',p:keyPos.greenKey,c:KEYCOL.green};
+  if(lockDoors.green.locked) return {t:'Opnaðu GRÆNU hurðina (bak við matsalinn)',p:keyPos.greenDoor,c:KEYCOL.green};
+  if(!k.purple) return {t:'Finndu FJÓLUBLÁA lykilinn í vínkjallaranum',p:keyPos.purpleKey,c:KEYCOL.purple};
+  if(lockDoors.purple.locked) return {t:'Opnaðu FJÓLUBLÁU hurðina (skrifstofan)',p:keyPos.purpleDoor,c:KEYCOL.purple};
+  if(!k.gold) return {t:'Finndu GULLLYKILINN á skrifstofunni!',p:keyPos.goldKey,c:KEYCOL.gold};
+  if(exitDoor.locked) return {t:'Opnaðu ÚTGANGINN í anddyrinu!',p:keyPos.exit,c:KEYCOL.gold};
+  return {t:'FLÝÐU ÚT UM AÐALDYRNAR!!',p:keyPos.exit,c:KEYCOL.gold};
+}
+function update(dt){
+  if(G.online&&!NET.host){ updateOnlineGuest(dt); return; }
+  if(G.over||G.won){
+    if(G.endT>0){ G.endT-=dt; if(G.endT<=0) showEnd(); }
+    G.scare=Math.max(0,G.scare-dt);
+    G.shake=Math.max(0,G.shake-dt*2);
+    G.parts.forEach(q=>{q.age+=dt;q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=dt*2;});
+    G.parts=G.parts.filter(q=>q.age<q.life);
+    if(G.online&&NET.host)netMaybeSnapshot(dt);
+    return;
+  }
+  G.time+=dt; G.intro=Math.max(0,G.intro-dt);
+  G.scare=Math.max(0,G.scare-dt); G.shake=Math.max(0,G.shake-dt*2);
+  G.flashFx=Math.max(0,G.flashFx-dt); G.spotFx=Math.max(0,G.spotFx-dt*.7);
+  if(G.online){
+    for(const p of players){if(p.netConnected===false)continue;if(p.i===NET.slot)updatePlayer(p,dt);else netUpdateRemoteHost(p,dt);}
+  }else for(const p of players) updatePlayer(p,dt);
+  updateMonster(dt);
+  // safnhlutir
+  for(const p of activePlayers()){
+    if(p.downed||p.hidden)continue;
+    for(const it of pickups){ if(!it.taken&&dist(p.x,p.y,it.x,it.y)<.62) collect(p,it); }
+  }
+  // sigur?
+  if(exitDoor.open){
+    for(const p of activePlayers()){ if(!p.downed&&p.y>49.42&&p.x>35.2&&p.x<40.8){ winGame(); break; } }
+  }
+  // könnuð svæði
+  G.exploreT-=dt;
+  if(G.exploreT<=0){
+    G.exploreT=.14;
+    for(const p of activePlayers()){
+      const px=Math.floor(p.x),py=Math.floor(p.y);
+      for(let dy=-6;dy<=6;dy++)for(let dx=-6;dx<=6;dx++){
+        if(dx*dx+dy*dy>40)continue;
+        const x=px+dx,y=py+dy;
+        if(x>=0&&y>=0&&x<MW&&y<MH) explored[gi(x,y)]=1;
+      }
+    }
+  }
+  // hjartsláttur & eltingamúsík
+  const md=Math.min(...activePlayers().filter(p=>!p.downed).map(p=>dist(mon.x,mon.y,p.x,p.y)),99);
+  if(md<15&&G.grace<=0){
+    G.heartT-=dt;
+    if(G.heartT<=0){ A.thump(.22*(1.15-md/15)); G.heartT=.42+ (md/15)*1.0; }
+  }
+  if(mon.state==='chase'){ G.chaseT-=dt; if(G.chaseT<=0){ A.chaseNote(G.chaseI++); G.chaseT=.16; } }
+  // elding
+  G.lightT-=dt; G.lightning=Math.max(0,G.lightning-dt);
+  if(G.lightT<=0){ G.lightning=.5; A.thunder(); G.lightT=9+Math.random()*15; }
+  // v2: hótelatvik — 3 valin af handahófi í hverjum leik
+  if(G.grace<=0){
+    G.eventT-=dt;
+    if(G.eventT<=0&&G.eventPool.length){
+      const ev=G.eventPool.shift(); G.eventT=50+Math.random()*35;
+      if(ev==='myrkvun'){ G.blackout=20; toast('⚡ RAFMAGNIÐ FER AF!','#ffd76a',true); A.thunder(); }
+      else if(ev==='simi'){ toast('☎️ Síminn í móttökunni hringir…','#cde',true); A.ring();
+        if(mon.state==='patrol'||mon.state==='search'){ mon.state='invest'; mon.target=[35.5,43.5]; mon.path=null; } }
+      else if(ev==='skellur'){ const cand=doors.filter(d=>!d.exit&&d.open);
+        const d=cand.length?cand[(Math.random()*cand.length)|0]:null;
+        if(d){ d.open=false; A.slam(); toast('🚪 Hurð skelltist einhvers staðar!','#f99',true);
+          if(mon.state==='patrol'){ mon.state='invest'; mon.target=[d.x+.5,d.y+.5]; mon.path=null; } }
+        else G.eventT=6; }
+      else if(ev==='flokt'){ G.flicker=12; toast('💡 Ljósin flökta undarlega…','#ffe9a0',true); }
+      else if(ev==='hvisl'){ toast('🌬️ Hvísl berst um gangana…','#cbd',true); A.whisper(); }
+    }
+  }
+  if(G.blackout>0){ G.blackout-=dt; if(G.blackout<=0){ G.blackout=0; toast('💡 Rafmagnið er komið aftur','#9f9'); } }
+  if(G.flicker>0) G.flicker-=dt;
+  // v2: ábendingaörin — telur hve lengi sama markmið hefur staðið
+  const ob=objective();
+  if(ob.t!==G.lastObj){ G.lastObj=ob.t; G.stuckT=0; } else G.stuckT+=dt;
+  // skilaboð & agnir
+  G.msgs.forEach(m=>m.age+=dt); G.msgs=G.msgs.filter(m=>m.age<m.life);
+  G.parts.forEach(q=>{q.age+=dt;q.x+=q.vx*dt;q.y+=q.vy*dt;q.vx*=.98;q.vy*=.98;});
+  G.parts=G.parts.filter(q=>q.age<q.life);
+  if(G.online&&NET.host)netMaybeSnapshot(dt);
+}
+// ============================================================ TEIKNUN — fast lag (gólf + veggir)
+let staticCv=null; const STILE=26;
+const FLOORCOL={
+  [F.HALL]:'#4a3a2e',[F.ROOM]:'#5a2e34',[F.LOBBY]:'#8a8578',[F.WATER]:'#1d5e8a',
+  [F.CELLAR]:'#3a3630',[F.KITCH]:'#75705f',[F.BATH]:'#6d7d80',[F.GYM]:'#4f4a55',
+  [F.BOILER]:'#463732',[F.DECK]:'#6e8288',[F.BALL]:'#5e4a63',[F.LAUN]:'#576066',
+  [F.LIB]:'#54402f',[F.DINE]:'#5d4a35',[F.STORE]:'#4c443c',[F.OFFICE]:'#4e4a3f'};
+function buildStatic(){
+  staticCv=document.createElement('canvas');
+  staticCv.width=MW*STILE; staticCv.height=MH*STILE;
+  const c=staticCv.getContext('2d');
+  const srnd=mulberry(42);
+  for(let y=0;y<MH;y++)for(let x=0;x<MW;x++){
+    const g=grid[gi(x,y)], px=x*STILE, py=y*STILE;
+    if(g===F.WALL){
+      const floorBelow=y+1<MH&&grid[gi(x,y+1)]!==F.WALL;
+      c.fillStyle='#0f0c1a'; c.fillRect(px,py,STILE,STILE);
+      if(floorBelow){ c.fillStyle='#251d38'; c.fillRect(px,py+STILE*.45,STILE,STILE*.55);
+        c.fillStyle='#332a4a'; c.fillRect(px,py+STILE*.45,STILE,2); }
+      continue;
+    }
+    c.fillStyle=FLOORCOL[g]||'#444'; c.fillRect(px,py,STILE,STILE);
+    c.strokeStyle='rgba(0,0,0,.14)'; c.lineWidth=1; c.strokeRect(px+.5,py+.5,STILE-1,STILE-1);
+    if(g===F.HALL||g===F.LIB||g===F.DINE){ c.fillStyle='rgba(0,0,0,.16)'; c.fillRect(px,py+((x%2)?STILE*.5:0),STILE,2); }
+    else if(g===F.ROOM||g===F.BALL){ c.fillStyle='rgba(255,255,255,.06)'; c.beginPath(); c.arc(px+STILE/2,py+STILE/2,2.2,0,7); c.fill();
+      if(g===F.BALL){ c.strokeStyle='rgba(255,255,255,.05)'; c.beginPath(); c.moveTo(px,py+STILE/2); c.lineTo(px+STILE/2,py); c.lineTo(px+STILE,py+STILE/2); c.lineTo(px+STILE/2,py+STILE); c.closePath(); c.stroke(); } }
+    else if(g===F.LOBBY){ if(srnd()<.3){ c.strokeStyle='rgba(255,255,255,.10)'; c.beginPath(); c.moveTo(px,py+STILE); c.lineTo(px+STILE,py); c.stroke(); } }
+    else if(g===F.KITCH){ if((x+y)%2===0){ c.fillStyle='rgba(0,0,0,.15)'; c.fillRect(px,py,STILE,STILE); } }
+    else if(g===F.WATER){ c.fillStyle='rgba(255,255,255,.07)'; c.fillRect(px,py+STILE*.3,STILE*.6,1.6); }
+    else if(g===F.CELLAR||g===F.BOILER){ c.fillStyle='rgba(0,0,0,.2)'; if(srnd()<.4)c.fillRect(px+srnd()*STILE*.6,py+srnd()*STILE*.6,STILE*.3,STILE*.25); }
+  }
+  // "HÓTEL SALKA" gólfmerki í anddyrinu
+  c.save(); c.translate(38*STILE,38.6*STILE);
+  c.font='900 '+(STILE*1.05)+'px system-ui,sans-serif'; c.textAlign='center';
+  c.fillStyle='rgba(60,40,20,.4)'; c.fillText('HÓTEL SALKA',0,0); c.restore();
+}
+
+// ============================================================ TEIKNUN — hlutir & persónur
+function drawProp(pr,wx,wy,Z,t){
+  const x=wx(pr.x),y=wy(pr.y),w=pr.w*Z,h=pr.h*Z;
+  ctx.lineWidth=Math.max(1.5,Z*.05); ctx.strokeStyle='#000';
+  const ty=pr.type;
+  if(ty==='closet'||ty==='wardrobe'){
+    ctx.fillStyle=ty==='closet'?'#6b4a2b':'#4a3555';
+    rr(ctx,x+2,y+2,w-4,h-4,Z*.12); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle='rgba(0,0,0,.5)'; ctx.beginPath(); ctx.moveTo(x+w/2,y+4); ctx.lineTo(x+w/2,y+h-4); ctx.stroke();
+    ctx.fillStyle='#e8c56a';
+    ctx.beginPath(); ctx.arc(x+w/2-Z*.09,y+h/2,Z*.045,0,7); ctx.arc(x+w/2+Z*.09,y+h/2,Z*.045,0,7); ctx.fill();
+    if(ty==='wardrobe'){
+      const newOutfit=pr.outfit&&!players.every(q=>q.owned.includes(pr.outfit));
+      ctx.fillStyle=newOutfit?'#f4c542':OUTFITS[pr.outfit].c;
+      ctx.beginPath(); ctx.arc(x+w/2,y+Z*.16,Z*.11,0,7); ctx.fill(); ctx.stroke();
+      if(newOutfit){ ctx.fillStyle='#fff'; ctx.font='900 '+Z*.22+'px sans-serif'; ctx.textAlign='center'; ctx.fillText('?',x+w/2,y+Z*.24); }
+    }
+    if(pr.occ){ ctx.fillStyle='#fff';
+      ctx.beginPath(); ctx.arc(x+w/2-Z*.08,y+h*.42,Z*.035,0,7); ctx.arc(x+w/2+Z*.08,y+h*.42,Z*.035,0,7); ctx.fill(); }
+  } else if(ty==='bed'){
+    ctx.fillStyle='#5c3a20'; rr(ctx,x+1,y+1,w-2,h-2,Z*.1); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#cfc5b4'; rr(ctx,x+Z*.1,y+Z*.1,w-Z*.2,h-Z*.2,Z*.08); ctx.fill();
+    ctx.fillStyle='#fff'; rr(ctx,x+Z*.18,y+Z*.16,w-Z*.36,Z*.5,Z*.08); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#8f2f3a'; rr(ctx,x+Z*.1,y+Z*.8,w-Z*.2,h-Z*.9,Z*.06); ctx.fill();
+  } else if(ty==='crate'){
+    ctx.fillStyle='#7a5a30'; rr(ctx,x+2,y+2,w-4,h-4,3); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x+4,y+4); ctx.lineTo(x+w-4,y+h-4); ctx.moveTo(x+w-4,y+4); ctx.lineTo(x+4,y+h-4); ctx.stroke();
+  } else if(ty==='table'){
+    ctx.fillStyle='#6e4a26'; ctx.beginPath(); ctx.arc(x+w/2,y+h/2,w*.44,0,7); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,.12)'; ctx.beginPath(); ctx.arc(x+w/2-w*.1,y+h/2-w*.1,w*.2,0,7); ctx.fill();
+  } else if(ty==='desk'){
+    ctx.fillStyle=pr.recep?'#5c3d5c':'#6e4a26'; rr(ctx,x+1,y+2,w-2,h-4,Z*.1); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#f1ead2'; ctx.fillRect(x+w*.15,y+h*.3,Z*.3,Z*.22);
+    if(pr.recep){ ctx.fillStyle='#f4c542'; ctx.beginPath(); ctx.arc(x+w*.72,y+h*.5,Z*.09,0,7); ctx.fill(); ctx.stroke(); }
+  } else if(ty==='night'){
+    ctx.fillStyle='#6e4a26'; rr(ctx,x+3,y+3,w-6,h-6,3); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#ffe2a0'; ctx.beginPath(); ctx.arc(x+w/2,y+h/2,Z*.12,0,7); ctx.fill();
+  } else if(ty==='plant'){
+    ctx.fillStyle='#8a4a2a'; ctx.beginPath(); ctx.moveTo(x+w*.3,y+h*.6); ctx.lineTo(x+w*.7,y+h*.6); ctx.lineTo(x+w*.62,y+h*.92); ctx.lineTo(x+w*.38,y+h*.92); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#2f7a3f';
+    [[.5,.32],[.32,.45],[.68,.45],[.5,.52]].forEach(o=>{ctx.beginPath();ctx.arc(x+w*o[0],y+h*o[1],w*.17,0,7);ctx.fill();});
+    ctx.stroke();
+  } else if(ty==='sofa'){
+    ctx.fillStyle='#8f2f3a'; rr(ctx,x+2,y+h*.25,w-4,h*.7,Z*.14); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#a84250'; rr(ctx,x+2,y+2,w-4,h*.32,Z*.12); ctx.fill(); ctx.stroke();
+  } else if(ty==='tv'){
+    ctx.fillStyle='#181820'; rr(ctx,x+2,y+3,w-4,h-6,3); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='rgba(140,220,255,'+(.25+.2*Math.sin(t*9))+')'; ctx.fillRect(x+w*.2,y+h*.25,w*.6,h*.5);
+  } else if(ty==='counter'){
+    ctx.fillStyle='#9a958a'; rr(ctx,x+1,y+2,w-2,h-4,4); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='rgba(0,0,0,.15)'; for(let i=1;i<pr.w;i++){ ctx.fillRect(x+i*Z-1,y+3,2,h-6); }
+  } else if(ty==='stove'){
+    ctx.fillStyle='#d8d4c8'; rr(ctx,x+2,y+2,w-4,h-4,3); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#222'; [[.3,.3],[.7,.3],[.3,.7],[.7,.7]].forEach(o=>{ctx.beginPath();ctx.arc(x+w*o[0],y+h*o[1],w*.13,0,7);ctx.fill();});
+  } else if(ty==='fridge'){
+    ctx.fillStyle='#e2ded2'; rr(ctx,x+2,y+1,w-4,h-2,3); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#888'; ctx.fillRect(x+w*.75,y+h*.2,2,h*.3);
+  } else if(ty==='shelf'){
+    ctx.fillStyle='#5c3a20'; rr(ctx,x+1,y+2,w-2,h-4,3); ctx.fill(); ctx.stroke();
+    const cols=['#b34','#4a7','#47b','#ca4','#a4c'];
+    for(let i=0;i<pr.w*4;i++){ ctx.fillStyle=cols[i%5]; ctx.fillRect(x+3+i*(w-6)/(pr.w*4),y+h*.2,(w-6)/(pr.w*4)-1,h*.55); }
+  } else if(ty==='washer'){
+    ctx.fillStyle='#dcd8cc'; rr(ctx,x+2,y+2,w-4,h-4,4); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#3a5a72'; ctx.beginPath(); ctx.arc(x+w/2,y+h*.55,w*.26,0,7); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#222'; ctx.beginPath(); ctx.arc(x+w*.78,y+h*.18,2.5,0,7); ctx.fill();
+  } else if(ty==='weight'){
+    ctx.fillStyle='#333'; ctx.fillRect(x+w*.15,y+h*.42,w*.7,h*.14);
+    ctx.beginPath(); ctx.arc(x+w*.2,y+h/2,w*.17,0,7); ctx.arc(x+w*.8,y+h/2,w*.17,0,7); ctx.fill(); ctx.stroke();
+  } else if(ty==='bench'){
+    ctx.fillStyle='#7a5a30'; rr(ctx,x+2,y+h*.3,w-4,h*.4,4); ctx.fill(); ctx.stroke();
+  } else if(ty==='boiler'){
+    const gl=.5+.5*Math.sin(t*5);
+    ctx.fillStyle='#5a2620'; rr(ctx,x+2,y+2,w-4,h-4,Z*.2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='rgba(255,120,40,'+(.35+.3*gl)+')'; rr(ctx,x+w*.25,y+h*.55,w*.5,h*.3,4); ctx.fill();
+    ctx.fillStyle='#ccc'; ctx.beginPath(); ctx.arc(x+w/2,y+h*.28,w*.1,0,7); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle='#f60'; ctx.beginPath(); ctx.moveTo(x+w/2,y+h*.28); ctx.lineTo(x+w/2+w*.07*Math.cos(t*3),y+h*.28+w*.07*Math.sin(t*3)); ctx.stroke();
+  } else if(ty==='tub'){
+    ctx.fillStyle='#e8e4da'; rr(ctx,x+2,y+2,w-4,h-4,h*.4); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#9fc8d8'; rr(ctx,x+w*.12,y+h*.2,w*.76,h*.6,h*.3); ctx.fill();
+  } else if(ty==='sink'){
+    ctx.fillStyle='#e8e4da'; ctx.beginPath(); ctx.arc(x+w/2,y+h/2,w*.36,0,7); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#9fc8d8'; ctx.beginPath(); ctx.arc(x+w/2,y+h/2,w*.2,0,7); ctx.fill();
+  }
+}
+function drawPickup(it,wx,wy,Z,t){
+  const bob=Math.sin(t*2.4+it.bob)*.07;
+  const x=wx(it.x), y=wy(it.y+bob);
+  ctx.lineWidth=Math.max(1.2,Z*.04); ctx.strokeStyle='#000';
+  if(it.kind==='coin'){
+    const s=Math.abs(Math.sin(t*3+it.bob));
+    ctx.fillStyle='#f4c542'; ctx.beginPath(); ctx.ellipse(x,y,Z*.17*Math.max(.25,s),Z*.17,0,0,7); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#fff2c0'; ctx.beginPath(); ctx.ellipse(x-Z*.04*s,y-Z*.05,Z*.05*Math.max(.25,s),Z*.05,0,0,7); ctx.fill();
+  } else if(it.kind==='key'){
+    ctx.save(); ctx.translate(x,y); ctx.rotate(Math.sin(t*1.8+it.bob)*.25);
+    ctx.shadowColor=KEYCOL[it.col]; ctx.shadowBlur=Z*.4;
+    ctx.fillStyle=KEYCOL[it.col];
+    ctx.beginPath(); ctx.arc(-Z*.12,0,Z*.11,0,7); ctx.fill(); ctx.stroke();
+    ctx.fillRect(-Z*.04,-Z*.035,Z*.26,Z*.07);
+    ctx.fillRect(Z*.12,0,Z*.05,Z*.12); ctx.fillRect(Z*.2,0,Z*.05,Z*.14);
+    ctx.restore();
+  } else if(it.kind==='flash'){
+    ctx.save(); ctx.translate(x,y); ctx.rotate(-.5);
+    ctx.fillStyle='#556'; rr(ctx,-Z*.2,-Z*.07,Z*.34,Z*.14,Z*.05); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#ffe28a'; rr(ctx,Z*.14,-Z*.09,Z*.1,Z*.18,Z*.03); ctx.fill(); ctx.stroke();
+    ctx.restore();
+  } else if(it.kind==='pan'){
+    ctx.fillStyle='#23252d'; ctx.beginPath(); ctx.arc(x,y,Z*.18,0,7); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#444'; ctx.beginPath(); ctx.arc(x,y,Z*.12,0,7); ctx.fill();
+    ctx.fillStyle='#6b4a2b'; rr(ctx,x+Z*.14,y-Z*.035,Z*.24,Z*.07,Z*.03); ctx.fill(); ctx.stroke();
+  } else if(it.kind==='choc'){
+    ctx.fillStyle='#5c3320'; rr(ctx,x-Z*.16,y-Z*.1,Z*.32,Z*.2,Z*.04); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#c9a227'; ctx.fillRect(x-Z*.05,y-Z*.1,Z*.1,Z*.2);
+  } else if(it.kind==='note'){
+    ctx.save(); ctx.translate(x,y); ctx.rotate(.15);
+    ctx.fillStyle='#e8dcb8'; rr(ctx,-Z*.13,-Z*.16,Z*.26,Z*.32,2); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle='rgba(0,0,0,.4)'; ctx.lineWidth=1;
+    for(let i=-1;i<=1;i++){ ctx.beginPath(); ctx.moveTo(-Z*.08,i*Z*.07); ctx.lineTo(Z*.08,i*Z*.07); ctx.stroke(); }
+    ctx.restore();
+  }
+}
+function drawDoor(d,wx,wy,Z){
+  if(d.exit){
+    const x=wx(d.x), y=wy(d.y), w=d.w*Z;
+    ctx.lineWidth=Math.max(2,Z*.06); ctx.strokeStyle='#000';
+    if(!d.open){
+      ctx.fillStyle='#8a6a1f'; rr(ctx,x+2,y+Z*.05,w-4,Z*.85,Z*.1); ctx.fill(); ctx.stroke();
+      ctx.fillStyle='#f4c542'; rr(ctx,x+w*.1,y+Z*.15,w*.35,Z*.62,Z*.08); ctx.fill(); ctx.stroke();
+      rr(ctx,x+w*.55,y+Z*.15,w*.35,Z*.62,Z*.08); ctx.fill(); ctx.stroke();
+      ctx.fillStyle='#5c4310';
+      ctx.beginPath(); ctx.arc(x+w*.42,y+Z*.48,Z*.06,0,7); ctx.arc(x+w*.58,y+Z*.48,Z*.06,0,7); ctx.fill();
+      ctx.fillStyle='#f4c542'; ctx.font='900 '+Z*.42+'px system-ui,sans-serif'; ctx.textAlign='center';
+      ctx.fillText('ÚT →',x+w/2,y-Z*.18);
+    } else {
+      ctx.fillStyle='#0a0806'; ctx.fillRect(x,y,w,Z);
+      ctx.fillStyle='rgba(255,230,150,.5)';
+      ctx.beginPath(); ctx.moveTo(x,y+Z); ctx.lineTo(x+w,y+Z); ctx.lineTo(x+w*.75,y-Z*.4); ctx.lineTo(x+w*.25,y-Z*.4); ctx.closePath(); ctx.fill();
+      ctx.fillStyle='#f4c542'; ctx.font='900 '+Z*.42+'px system-ui,sans-serif'; ctx.textAlign='center';
+      ctx.fillText('ÚT!!',x+w/2,y-Z*.18);
+    }
+    return;
+  }
+  const x=wx(d.x), y=wy(d.y);
+  const col=d.lock?KEYCOL[d.lock]:'#7a5a30';
+  ctx.lineWidth=Math.max(1.5,Z*.05); ctx.strokeStyle='#000';
+  if(!d.open){
+    if(d.horiz){ ctx.fillStyle=col; rr(ctx,x+Z*.04,y+Z*.28,Z*.92,Z*.44,Z*.08); ctx.fill(); ctx.stroke();
+      ctx.fillStyle='rgba(255,255,255,.2)'; ctx.beginPath(); ctx.arc(x+Z*.78,y+Z*.5,Z*.06,0,7); ctx.fill(); }
+    else { ctx.fillStyle=col; rr(ctx,x+Z*.28,y+Z*.04,Z*.44,Z*.92,Z*.08); ctx.fill(); ctx.stroke();
+      ctx.fillStyle='rgba(255,255,255,.2)'; ctx.beginPath(); ctx.arc(x+Z*.5,y+Z*.78,Z*.06,0,7); ctx.fill(); }
+    if(d.locked){
+      ctx.fillStyle='#111'; rr(ctx,x+Z*.36,y+Z*.36,Z*.28,Z*.24,Z*.05); ctx.fill();
+      ctx.strokeStyle=col; ctx.lineWidth=Math.max(1.5,Z*.05);
+      ctx.beginPath(); ctx.arc(x+Z*.5,y+Z*.38,Z*.09,Math.PI,0); ctx.stroke();
+    }
+  } else {
+    ctx.fillStyle=col;
+    if(d.horiz) rr(ctx,x+Z*.02,y+Z*.3,Z*.18,Z*.4,Z*.05);
+    else rr(ctx,x+Z*.3,y+Z*.02,Z*.4,Z*.18,Z*.05);
+    ctx.fill(); ctx.stroke();
+  }
+}
+function drawChar(p,wx,wy,Z,t){
+  if(p.hidden)return;
+  const x=wx(p.x), y=wy(p.y);
+  const o=OUTFITS[p.outfit];
+  if(p.invuln>0&&Math.sin(t*18)>0) return; // blikk eftir högg
+  ctx.save(); ctx.translate(x,y);
+  if(p.downed) ctx.rotate(Math.PI/2);
+  const fx=Math.cos(p.dir), fy=Math.sin(p.dir);
+  // skuggi
+  ctx.fillStyle='rgba(0,0,0,.35)'; ctx.beginPath(); ctx.ellipse(0,Z*.26,Z*.26,Z*.11,0,0,7); ctx.fill();
+  ctx.lineWidth=Math.max(1.5,Z*.05); ctx.strokeStyle='#000';
+  const bob=p.moving?Math.sin(t*11)*Z*.03:0;
+  // hendur
+  ctx.fillStyle='#f6d35e';
+  ctx.beginPath(); ctx.arc(-Z*.3,bob,Z*.1,0,7); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.arc(Z*.3,-bob,Z*.1,0,7); ctx.fill(); ctx.stroke();
+  // panna í hendi
+  if(p.pan>0){ ctx.save(); ctx.translate(Z*.3,-bob); ctx.rotate(p.dir+(p.swing>0?Math.sin(p.swing*30)*1.4:0));
+    ctx.fillStyle='#23252d'; ctx.beginPath(); ctx.arc(Z*.24,0,Z*.13,0,7); ctx.fill(); ctx.stroke(); ctx.restore(); }
+  // búkur
+  ctx.fillStyle=o.c; rr(ctx,-Z*.22,-Z*.16+bob*.4,Z*.44,Z*.42,Z*.12); ctx.fill(); ctx.stroke();
+  if(p.outfit===3){ ctx.fillStyle='rgba(255,255,255,.35)'; rr(ctx,-Z*.22,-Z*.16,Z*.44,Z*.12,Z*.06); ctx.fill(); }
+  // haus
+  ctx.fillStyle=p.outfit===4?'#e8ecff':'#f6d35e';
+  rr(ctx,-Z*.19,-Z*.5,Z*.38,Z*.36,Z*.11); ctx.fill(); ctx.stroke();
+  // andlit snýr í stefnu
+  const ex=fx*Z*.06, ey=fy*Z*.04;
+  ctx.fillStyle='#222';
+  ctx.beginPath(); ctx.arc(-Z*.07+ex,-Z*.34+ey,Z*.035,0,7); ctx.arc(Z*.07+ex,-Z*.34+ey,Z*.035,0,7); ctx.fill();
+  ctx.strokeStyle='#222'; ctx.lineWidth=Math.max(1,Z*.03);
+  ctx.beginPath(); ctx.arc(ex,-Z*.28+ey,Z*.06,.2,Math.PI-.2); ctx.stroke();
+  // mismunandi húfur gera netspilara læsilega
+  if(p.i>0){ const pc=['#4f8dff','#3fbf6f','#a862ea','#f4c542'][p.i%4];
+    ctx.fillStyle=pc; ctx.strokeStyle='#000'; ctx.lineWidth=Math.max(1.5,Z*.05);
+    rr(ctx,-Z*.19,-Z*.54,Z*.38,Z*.12,Z*.06); ctx.fill(); ctx.stroke(); }
+  ctx.restore();
+  // nafnmerki
+  if(G.online||G.np===2){ ctx.font='800 '+Math.max(9,Z*.2)+'px system-ui,sans-serif'; ctx.textAlign='center';
+    ctx.fillStyle=['#4f8dff','#3fbf6f','#a862ea','#f4c542'][p.i%4];
+    const nm=G.online?(p.netName+(p.i===NET.slot?' · þú':'')):('S'+(p.i+1));
+    ctx.fillText(nm,x,y-Z*.62); }
+  // lífgunarhringur
+  if(p.downed&&p.rev>0){
+    ctx.strokeStyle='#8f8'; ctx.lineWidth=Z*.08;
+    ctx.beginPath(); ctx.arc(x,y,Z*.5,-Math.PI/2,-Math.PI/2+p.rev/1.5*Math.PI*2); ctx.stroke();
+  }
+}
+function drawMon(wx,wy,Z,t){
+  const x=wx(mon.x), y=wy(mon.y);
+  const chase=mon.state==='chase';
+  const asleep=G.grace>0;
+  const w=mon.wob;
+  ctx.save(); ctx.translate(x,y);
+  // þokuslóð
+  ctx.fillStyle='rgba(5,6,12,.45)';
+  for(let i=0;i<3;i++){ const rr2=Z*(.75-i*.14)*(1+.06*Math.sin(w*3+i*2));
+    ctx.beginPath(); ctx.arc(Math.sin(w*2+i)*Z*.06,Z*.1*i-Z*.1,rr2,0,7); ctx.fill(); }
+  // búkurinn
+  ctx.fillStyle='#07080f';
+  ctx.beginPath();
+  const R=Z*.62;
+  for(let i=0;i<=16;i++){ const a=i/16*Math.PI*2, rad=R*(1+.09*Math.sin(a*5+w*4));
+    const px2=Math.cos(a)*rad, py2=Math.sin(a)*rad*.92-Z*.12;
+    i?ctx.lineTo(px2,py2):ctx.moveTo(px2,py2); }
+  ctx.closePath(); ctx.fill();
+  ctx.strokeStyle='rgba(120,40,60,.5)'; ctx.lineWidth=Math.max(1.5,Z*.05); ctx.stroke();
+  // augu
+  const ec=chase?'#ff2b3a':(G.keys.gold?'#ff8a4a':'#dfe8ff');
+  const blink=asleep?.15:1;
+  ctx.shadowColor=ec; ctx.shadowBlur=Z*.5;
+  ctx.fillStyle=ec;
+  const look=Math.atan2((mon.seen?mon.seen[1]:mon.y+Math.sin(w))-mon.y,(mon.seen?mon.seen[0]:mon.x+Math.cos(w))-mon.x);
+  const lx=Math.cos(look)*Z*.05, ly=Math.sin(look)*Z*.05;
+  ctx.beginPath(); ctx.ellipse(-Z*.16+lx,-Z*.22+ly,Z*.085,Z*.085*blink,0,0,7); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(Z*.16+lx,-Z*.22+ly,Z*.085,Z*.085*blink,0,0,7); ctx.fill();
+  ctx.shadowBlur=0;
+  if(chase){ ctx.fillStyle='#fff';
+    ctx.beginPath(); ctx.moveTo(-Z*.2,Z*.08);
+    for(let i=0;i<=6;i++){ ctx.lineTo(-Z*.2+i*Z*.066,Z*.08+((i%2)?Z*.12:0)); }
+    ctx.lineTo(Z*.2,Z*.08); ctx.closePath(); ctx.fill(); }
+  if(mon.stun>0){ ctx.fillStyle='#ffe28a'; ctx.font='900 '+Z*.3+'px sans-serif'; ctx.textAlign='center';
+    for(let i=0;i<3;i++){ const a=w*5+i*2.1; ctx.fillText('✦',Math.cos(a)*Z*.5,-Z*.6+Math.sin(a)*Z*.12); } }
+  if(asleep){ ctx.fillStyle='#9aa'; ctx.font='700 '+Z*.3+'px sans-serif'; ctx.textAlign='center'; ctx.fillText('z'+(Math.floor(w)%2?'Z':'z'),Z*.4,-Z*.6); }
+  ctx.restore();
+  if(G.spotFx>0){ ctx.fillStyle='rgba(255,43,58,'+Math.min(1,G.spotFx)+')';
+    ctx.font='900 '+Z*.8+'px system-ui,sans-serif'; ctx.textAlign='center'; ctx.fillText('!',x,y-Z*1.05); }
+}
+// ============================================================ TEIKNUN — sýn, ljós, HUD
+const lightCvs=[document.createElement('canvas'),document.createElement('canvas')];
+function fmtT(s){ s=Math.floor(s); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+function drawHeart(x,y,s,on){
+  ctx.save(); ctx.translate(x,y); ctx.scale(s/10,s/10);
+  ctx.beginPath(); ctx.moveTo(0,3);
+  ctx.bezierCurveTo(-1,-1,-8,-2,-8,3); ctx.bezierCurveTo(-8,7,-2,9,0,12);
+  ctx.bezierCurveTo(2,9,8,7,8,3); ctx.bezierCurveTo(8,-2,1,-1,0,3);
+  ctx.closePath();
+  ctx.fillStyle=on?'#ff3b4d':'rgba(255,255,255,.14)'; ctx.fill();
+  ctx.lineWidth=2; ctx.strokeStyle='#000'; ctx.stroke();
+  ctx.restore();
+}
+function drawKeyIcon(x,y,s,col,on){
+  ctx.save(); ctx.translate(x,y); ctx.globalAlpha=on?1:.22;
+  ctx.fillStyle=col; ctx.strokeStyle='#000'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.arc(-s*.3,0,s*.28,0,7); ctx.fill(); ctx.stroke();
+  ctx.fillRect(-s*.1,-s*.1,s*.75,s*.2);
+  ctx.fillRect(s*.35,0,s*.14,s*.32); ctx.fillRect(s*.58,0,s*.14,s*.38);
+  ctx.restore(); ctx.globalAlpha=1;
+}
+function findTarget(p){
+  if(p.hidden) return {label:'Koma út úr felum'};
+  if(G.online){ const m=players.find(q=>q!==p&&q.netConnected!==false&&q.downed&&dist(p.x,p.y,q.x,q.y)<1.6);
+    if(m) return {label:'Bjarga '+m.netName+' ❤'};
+  } else if(G.np===2){ const m=players[1-p.i];
+    if(m&&m.downed&&dist(p.x,p.y,m.x,m.y)<1.6) return {label:'HALTU inni til að bjarga félaga!',hold:true}; }
+  let best=null,bd=1.45;
+  for(const pr of props){
+    if(!(pr.hide||pr.outfit))continue;
+    const c=propCenter(pr), d=dist(p.x,p.y,c[0],c[1])-Math.max(pr.w,pr.h)*.25;
+    if(d<bd){ bd=d;
+      if(pr.outfit){ const nw=!p.owned.includes(pr.outfit);
+        best={label:nw?'Opna fataskápinn 👕':'Skipta um föt 👕'}; }
+      else best={label:pr.occ?null:(pr.type==='bed'?'Fela sig undir rúminu':'Fela sig í skápnum')}; }
+  }
+  for(const d of doors){
+    const cx=d.exit?d.x+d.w/2:d.x+.5, cy=d.y+.5, dd=dist(p.x,p.y,cx,cy);
+    if(dd<bd){ bd=dd;
+      if(d.locked) best={label:G.keys[d.lock]?(d.exit?'OPNA ÚTGANGINN! 🔓':'Opna með '+KEYNAME[d.lock]):'Læst 🔒 — vantar '+KEYNAME[d.lock]};
+      else best={label:d.open?(d.exit?null:'Loka hurðinni'):'Opna hurðina'}; }
+  }
+  return best&&best.label?best:null;
+}
+function renderView(v,p,t){
+  ctx.save();
+  ctx.beginPath(); ctx.rect(v.x,0,v.w,VH); ctx.clip();
+  const Z=v.z;
+  const shx=(Math.random()-.5)*G.shake*16, shy=(Math.random()-.5)*G.shake*16;
+  const camX=clamp(p.cam.x,(v.w/2)/Z,MW-(v.w/2)/Z), camY=clamp(p.cam.y,(VH/2)/Z,MH-(VH/2)/Z);
+  const wx=x=>v.x+(x-camX)*Z+v.w/2+shx, wy=y=>(y-camY)*Z+VH/2+shy;
+  // fast lag
+  ctx.imageSmoothingEnabled=true;
+  ctx.drawImage(staticCv,(camX-(v.w/2)/Z)*STILE,(camY-(VH/2)/Z)*STILE,(v.w/Z)*STILE,(VH/Z)*STILE,v.x+shx,shy,v.w,VH);
+  const inView=(x,y,m)=>x>camX-(v.w/2)/Z-m&&x<camX+(v.w/2)/Z+m&&y>camY-(VH/2)/Z-m&&y<camY+(VH/2)/Z+m;
+  // vatnsgárur
+  if(inView(20,42,10)){ ctx.strokeStyle='rgba(255,255,255,.14)'; ctx.lineWidth=Math.max(1,Z*.04);
+    for(let i=0;i<5;i++){ const yy=39+i*1.6+Math.sin(t*1.5+i)*0.3;
+      ctx.beginPath(); ctx.moveTo(wx(16.6),wy(yy)); ctx.quadraticCurveTo(wx(20),wy(yy+.4),wx(23.4),wy(yy)); ctx.stroke(); } }
+  for(const d of doors){ if(inView(d.x,d.y,3)) drawDoor(d,wx,wy,Z); }
+  for(const it of pickups){ if(!it.taken&&inView(it.x,it.y,2)) drawPickup(it,wx,wy,Z,t); }
+  for(const pr of props){ if(inView(pr.x+pr.w/2,pr.y+pr.h/2,4)) drawProp(pr,wx,wy,Z,t); }
+  for(const q of activePlayers()) if(inView(q.x,q.y,3)) drawChar(q,wx,wy,Z,t);
+  if(inView(mon.x,mon.y,4)) drawMon(wx,wy,Z,t);
+  // agnir
+  for(const q of G.parts){ ctx.globalAlpha=1-q.age/q.life; ctx.fillStyle=q.col;
+    ctx.beginPath(); ctx.arc(wx(q.x),wy(q.y),q.r*Z,0,7); ctx.fill(); }
+  ctx.globalAlpha=1;
+  // ljósblossinn
+  if(G.flashFx>0&&G.flashP){ const q=G.flashP, a=G.flashFx/.28;
+    ctx.fillStyle='rgba(220,240,255,'+(a*.5)+')';
+    ctx.beginPath(); ctx.moveTo(wx(q.x),wy(q.y));
+    ctx.lineTo(wx(q.x+Math.cos(q.dir-.45)*9),wy(q.y+Math.sin(q.dir-.45)*9));
+    ctx.lineTo(wx(q.x+Math.cos(q.dir+.45)*9),wy(q.y+Math.sin(q.dir+.45)*9));
+    ctx.closePath(); ctx.fill(); }
+  // myrkur
+  lightPass(v,p,camX,camY,Z,shx,shy,t);
+  // glóð ofan á myrkrið
+  ctx.globalCompositeOperation='lighter';
+  const glow=(x,y,r,col)=>{ const lx=wx(x),ly=wy(y);
+    const gr=ctx.createRadialGradient(lx,ly,0,lx,ly,r*Z);
+    gr.addColorStop(0,col); gr.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=gr; ctx.fillRect(lx-r*Z,ly-r*Z,r*Z*2,r*Z*2); };
+  if(inView(37.5,50,6)) glow(37.5,50,3,'rgba(255,200,90,.22)');
+  if(inView(67,42,7)) glow(67,42,3.5,'rgba(255,90,30,'+(.14+.08*Math.sin(t*5))+')');
+  if(inView(37.5,41.5,9)) glow(37.5,41.5,5,'rgba(255,220,150,.10)');
+  ctx.globalCompositeOperation='source-over';
+  // rauður púls þegar hann nálgast
+  const md=dist(mon.x,mon.y,p.x,p.y);
+  if(md<10&&G.grace<=0&&!p.hidden){
+    const a=(1-md/10)*.32*(0.7+0.3*Math.sin(t*7));
+    const gr=ctx.createRadialGradient(v.x+v.w/2,VH/2,VH*.3,v.x+v.w/2,VH/2,VH*.75);
+    gr.addColorStop(0,'rgba(0,0,0,0)'); gr.addColorStop(1,'rgba(255,20,35,'+a+')');
+    ctx.fillStyle=gr; ctx.fillRect(v.x,0,v.w,VH);
+  }
+  // dökk vignetta
+  const vg=ctx.createRadialGradient(v.x+v.w/2,VH/2,Math.min(v.w,VH)*.35,v.x+v.w/2,VH/2,Math.max(v.w,VH)*.75);
+  vg.addColorStop(0,'rgba(0,0,0,0)'); vg.addColorStop(1,'rgba(0,0,5,.5)');
+  ctx.fillStyle=vg; ctx.fillRect(v.x,0,v.w,VH);
+  // ---------------- HUD
+  const HX=v.x+16, HY=G.np===2?46:0;
+  for(let i=0;i<p.hpMax;i++) drawHeart(HX+8+i*26,26+HY,11,i<p.hp);
+  // þol
+  ctx.fillStyle='rgba(0,0,0,.55)'; rr(ctx,HX,44+HY,116,12,6); ctx.fill();
+  ctx.fillStyle=p.stam>.3?'#6fd66f':'#e5a03f'; rr(ctx,HX+2,46+HY,112*p.stam,8,4); ctx.fill();
+  ctx.lineWidth=2; ctx.strokeStyle='#000'; rr(ctx,HX,44+HY,116,12,6); ctx.stroke();
+  // lyklar
+  KEYORD.forEach((k,i)=>drawKeyIcon(HX+14+i*25,72+HY,10,KEYCOL[k],G.keys[k]));
+  // hlutir
+  let iy=96+HY;
+  if(p.flash){
+    ctx.fillStyle='rgba(0,0,0,.55)'; rr(ctx,HX,iy,86,22,8); ctx.fill(); ctx.strokeStyle='#000'; rr(ctx,HX,iy,86,22,8); ctx.stroke();
+    ctx.font='800 12px system-ui,sans-serif'; ctx.textAlign='left'; ctx.fillStyle='#cde';
+    ctx.fillText('🔦 '+(p.fcd>0?Math.ceil(p.fcd)+'s':'TILBÚIÐ'),HX+8,iy+15); iy+=27;
+  }
+  if(p.pan>0){
+    ctx.fillStyle='rgba(0,0,0,.55)'; rr(ctx,HX,iy,86,22,8); ctx.fill(); ctx.strokeStyle='#000'; rr(ctx,HX,iy,86,22,8); ctx.stroke();
+    ctx.font='800 12px system-ui,sans-serif'; ctx.textAlign='left'; ctx.fillStyle='#fc9';
+    ctx.fillText('🍳 ×'+p.pan,HX+8,iy+15); iy+=27;
+  }
+  // búningur
+  ctx.fillStyle='rgba(0,0,0,.45)'; rr(ctx,HX,iy,130,20,8); ctx.fill();
+  ctx.fillStyle=OUTFITS[p.outfit].c; ctx.beginPath(); ctx.arc(HX+11,iy+10,6,0,7); ctx.fill();
+  ctx.lineWidth=1.5; ctx.strokeStyle='#000'; ctx.stroke();
+  ctx.font='700 11px system-ui,sans-serif'; ctx.fillStyle='#ddd'; ctx.textAlign='left';
+  ctx.fillText(OUTFITS[p.outfit].n,HX+22,iy+14);
+  // markmið + áttaviti (v2: örin fer eftir erfiðleikastigi)
+  const obj=objective();
+  const showArrow=G.diff===0||(G.diff===1&&G.stuckT>40);
+  ctx.font='800 13px system-ui,sans-serif';
+  const ow=ctx.measureText(obj.t).width+(showArrow?56:26);
+  ctx.fillStyle='rgba(0,0,0,.6)'; rr(ctx,HX,VH-44,ow,28,10); ctx.fill(); ctx.strokeStyle='#000'; ctx.lineWidth=2; rr(ctx,HX,VH-44,ow,28,10); ctx.stroke();
+  ctx.fillStyle=obj.c; ctx.beginPath(); ctx.arc(HX+15,VH-30,6,0,7); ctx.fill(); ctx.strokeStyle='#000'; ctx.stroke();
+  ctx.fillStyle='#eee'; ctx.textAlign='left'; ctx.fillText(obj.t,HX+28,VH-25);
+  if(showArrow){
+    const oa=Math.atan2(obj.p[1]-p.y,obj.p[0]-p.x);
+    ctx.save(); ctx.translate(HX+ow-16,VH-30); ctx.rotate(oa);
+    ctx.fillStyle=obj.c; ctx.beginPath(); ctx.moveTo(9,0); ctx.lineTo(-5,-6); ctx.lineTo(-2,0); ctx.lineTo(-5,6); ctx.closePath(); ctx.fill(); ctx.strokeStyle='#000'; ctx.lineWidth=1.5; ctx.stroke(); ctx.restore();
+  }
+  // aðgerðavísir
+  const tg=findTarget(p);
+  if(tg&&!p.downed){
+    const kb=p.i?(p.hidden||tg.hold?'Enter':'Enter'):(p.hidden||tg.hold?'E':'E');
+    const txt='['+kb+'] '+tg.label;
+    ctx.font='800 13px system-ui,sans-serif';
+    const tw=ctx.measureText(txt).width+20;
+    const px2=clamp(wx(p.x)-tw/2,v.x+6,v.x+v.w-tw-6), py2=wy(p.y)-Z*1.05;
+    ctx.fillStyle='rgba(10,12,20,.85)'; rr(ctx,px2,py2-16,tw,24,9); ctx.fill();
+    ctx.strokeStyle='#000'; ctx.lineWidth=2; rr(ctx,px2,py2-16,tw,24,9); ctx.stroke();
+    ctx.fillStyle='#ffe9a0'; ctx.textAlign='left'; ctx.fillText(txt,px2+10,py2+1);
+  }
+  if(p.hidden){
+    ctx.font='900 15px system-ui,sans-serif'; ctx.textAlign='center';
+    ctx.fillStyle='rgba(160,200,255,'+(.7+.3*Math.sin(t*3))+')';
+    ctx.fillText('🤫 Þú ert í felum',v.x+v.w/2,VH-64);
+    if(p.breath<1){
+      const bw=130, bx=v.x+v.w/2-bw/2;
+      ctx.fillStyle='rgba(0,0,0,.6)'; rr(ctx,bx,VH-54,bw,10,5); ctx.fill();
+      ctx.fillStyle=p.breath>.35?'#7fc8e8':'#ff6a6a'; rr(ctx,bx+2,VH-52,(bw-4)*Math.max(0,p.breath),6,3); ctx.fill();
+      ctx.font='800 10px system-ui,sans-serif'; ctx.fillStyle='#9cf';
+      ctx.fillText('💨 andardráttur',v.x+v.w/2,VH-38);
+    }
+  }
+  if(p.cold>0.15){
+    const ca=Math.min(.45,p.cold*.45);
+    const cg=ctx.createRadialGradient(v.x+v.w/2,VH/2,VH*.25,v.x+v.w/2,VH/2,VH*.75);
+    cg.addColorStop(0,'rgba(0,0,0,0)'); cg.addColorStop(1,'rgba(70,150,230,'+ca+')');
+    ctx.fillStyle=cg; ctx.fillRect(v.x,0,v.w,VH);
+  }
+  if(p.downed){
+    ctx.fillStyle='rgba(120,0,10,.35)'; ctx.fillRect(v.x,0,v.w,VH);
+    ctx.font='900 20px system-ui,sans-serif'; ctx.textAlign='center'; ctx.fillStyle='#ffb0b0';
+    ctx.fillText('💀 ÞÚ LIGGUR — félagi þinn getur bjargað þér!',v.x+v.w/2,VH/2-40);
+  }
+  ctx.restore();
+}
+function lightPass(v,p,camX,camY,Z,shx,shy,t){
+  const lc=lightCvs[p.i];
+  if(lc.width!==Math.max(2,v.w|0)||lc.height!==Math.max(2,VH|0)){ lc.width=Math.max(2,v.w|0); lc.height=Math.max(2,VH|0); }
+  const g=lc.getContext('2d');
+  g.globalCompositeOperation='source-over';
+  g.clearRect(0,0,lc.width,lc.height);
+  let dark=G.diff===2?.952:.93;
+  if(G.blackout>0) dark=.985;
+  if(G.lightning>0) dark=Math.max(.4,dark-G.lightning*1.1);
+  g.fillStyle='rgba(3,3,9,'+dark+')'; g.fillRect(0,0,lc.width,lc.height);
+  g.globalCompositeOperation='destination-out';
+  const L=(x,y,r,a)=>{
+    const lx=(x-camX)*Z+v.w/2+shx, ly=(y-camY)*Z+VH/2+shy;
+    if(lx<-r*Z||ly<-r*Z||lx>v.w+r*Z||ly>VH+r*Z)return;
+    const gr=g.createRadialGradient(lx,ly,0,lx,ly,Math.max(2,r*Z));
+    gr.addColorStop(0,'rgba(0,0,0,'+a+')'); gr.addColorStop(1,'rgba(0,0,0,0)');
+    g.fillStyle=gr; g.fillRect(lx-r*Z,ly-r*Z,r*Z*2,r*Z*2);
+  };
+  for(const q of activePlayers()){
+    if(q.hidden){ L(q.x,q.y,2,.8); continue; }
+    L(q.x,q.y,G.blackout>0?2.6:4.6,.95);
+    if(q.flash&&!q.downed) for(let d2=1;d2<=8;d2++) L(q.x+Math.cos(q.dir)*d2,q.y+Math.sin(q.dir)*d2,.7+d2*.5,Math.max(.1,.85-d2*.085));
+  }
+  if(G.blackout<=0) for(const li of lights){
+    let fl=li.fl?(.72+.2*Math.sin(t*6+li.ph)+.08*Math.sin(t*23+li.ph*3)):.95;
+    if(G.flicker>0) fl*=(Math.sin(t*31+li.ph*7)>0?1:.15);
+    L(li.x,li.y,li.r*fl,.82);
+  }
+  for(const it of pickups){ if(!it.taken&&it.kind==='key') L(it.x,it.y,1.5,.8); }
+  L(37.5,50,2.8,.85);
+  L(mon.x,mon.y,1.15,.55);
+  ctx.drawImage(lc,v.x,0);
+}
+// ============================================================ YFIRLITSKORT
+const MAPCOL={
+  [F.HALL]:'#c9b98e',[F.ROOM]:'#c9a29a',[F.LOBBY]:'#e0d6b8',[F.WATER]:'#7fb8d8',
+  [F.CELLAR]:'#a89a80',[F.KITCH]:'#cec8ae',[F.BATH]:'#b8c8c2',[F.GYM]:'#b8aec2',
+  [F.BOILER]:'#c09a86',[F.DECK]:'#bcccc8',[F.BALL]:'#c8b0cc',[F.LAUN]:'#b4bec4',
+  [F.LIB]:'#c2a880',[F.DINE]:'#ccb896',[F.STORE]:'#b8ac9a',[F.OFFICE]:'#c4bc9e'};
+function drawMap(t){
+  ctx.fillStyle='rgba(8,6,4,.94)'; ctx.fillRect(0,0,VW,VH);
+  const S=Math.min((VW-70)/MW,(VH-110)/MH);
+  const ox=(VW-MW*S)/2, oy=(VH-MH*S)/2+14;
+  const mx=x=>ox+x*S, my=y=>oy+y*S;
+  ctx.fillStyle='#151007'; rr(ctx,ox-14,oy-14,MW*S+28,MH*S+28,12); ctx.fill();
+  ctx.strokeStyle='#000'; ctx.lineWidth=3; rr(ctx,ox-14,oy-14,MW*S+28,MH*S+28,12); ctx.stroke();
+  for(let y=0;y<MH;y++)for(let x=0;x<MW;x++){
+    if(!explored[gi(x,y)])continue;
+    const g=grid[gi(x,y)];
+    ctx.fillStyle=g===F.WALL?'#2e2517':(MAPCOL[g]||'#bbb');
+    ctx.fillRect(mx(x),my(y),S+.5,S+.5);
+  }
+  for(const d of doors){
+    if(!explored[gi(d.x,d.y)])continue;
+    const cx=d.exit?mx(d.x+d.w/2):mx(d.x+.5), cy=my(d.y+.5);
+    ctx.fillStyle=d.lock?KEYCOL[d.lock]:'#7a5a30';
+    ctx.beginPath(); ctx.arc(cx,cy,Math.max(2.5,S*.8),0,7); ctx.fill();
+    ctx.lineWidth=1.5; ctx.strokeStyle=d.locked?'#000':'#fff'; ctx.stroke();
+  }
+  ctx.font='700 '+Math.max(8,S*2.1)+'px system-ui,sans-serif'; ctx.textAlign='center';
+  for(const r of rooms){
+    const cx2=Math.floor((r.x0+r.x1)/2), cy2=Math.floor((r.y0+r.y1)/2);
+    if(!explored[gi(cx2,cy2)])continue;
+    ctx.fillStyle='rgba(40,28,10,.8)';
+    ctx.fillText(r.name,mx(cx2+.5),my(cy2+.5));
+  }
+  // útgangur
+  ctx.fillStyle='#f4c542'; ctx.font='900 '+Math.max(10,S*2.4)+'px system-ui,sans-serif';
+  ctx.fillText('★ ÚT',mx(38),my(50.2)+S*2);
+  // markmið
+  const obj=objective();
+  ctx.strokeStyle=obj.c; ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.arc(mx(obj.p[0]),my(obj.p[1]),S*2.2*(1+.25*Math.sin(t*5)),0,7); ctx.stroke();
+  // leikmenn
+  activePlayers().forEach(q=>{
+    ctx.save(); ctx.translate(mx(q.x),my(q.y)); ctx.rotate(q.dir);
+    ctx.fillStyle=q.i?'#3fbf6f':'#4f8dff';
+    ctx.beginPath(); ctx.moveTo(S*2.2,0); ctx.lineTo(-S*1.4,-S*1.4); ctx.lineTo(-S*.6,0); ctx.lineTo(-S*1.4,S*1.4); ctx.closePath();
+    ctx.fill(); ctx.strokeStyle='#000'; ctx.lineWidth=1.5; ctx.stroke(); ctx.restore();
+  });
+  // skrímslið heyrist ef nálægt
+  const md=Math.min(...activePlayers().map(q=>dist(mon.x,mon.y,q.x,q.y)),99);
+  if(md<12&&G.grace<=0){
+    ctx.fillStyle='rgba(255,43,58,'+(.6+.4*Math.sin(t*8))+')';
+    ctx.beginPath(); ctx.arc(mx(mon.x),my(mon.y),S*1.6,0,7); ctx.fill();
+    ctx.font='900 '+Math.max(10,S*2.6)+'px sans-serif'; ctx.fillText('?',mx(mon.x),my(mon.y)-S*2);
+  }
+  // v2: rauð viðvörun á kortinu þegar hann er hættulega nálægt
+  if(md<10&&G.grace<=0){
+    ctx.strokeStyle='rgba(255,43,58,'+(.35+.4*Math.sin(t*7))+')';
+    ctx.lineWidth=8; ctx.strokeRect(4,4,VW-8,VH-8);
+  }
+  ctx.font='900 16px system-ui,sans-serif'; ctx.textAlign='center';
+  ctx.fillStyle='#e8dcb8'; ctx.fillText('🗺️ KORT AF HÓTELINU',VW/2,oy-24);
+  ctx.font='700 12px system-ui,sans-serif';
+  ctx.fillStyle=(Math.sin(t*4)>0)?'#ff8a8a':'#c88';
+  ctx.fillText('Leikurinn heldur áfram! — M/Tab til að loka',VW/2,VH-16);
+  ctx.font='800 13px system-ui,sans-serif'; ctx.fillStyle='#e8dcb8';
+  ctx.fillText(obj.t,VW/2,VH-38);
+}
+// ============================================================ SKELFING & SKILABOÐ & VALMYNDARBAKGRUNNUR
+function drawScare(){
+  if(G.soft){ // léttur hryllingur: rautt blik, ekkert andlit
+    ctx.fillStyle='rgba(120,0,15,'+(.5*G.scare/.55)+')'; ctx.fillRect(0,0,VW,VH);
+    return;
+  }
+  const k=1-G.scare/.85;
+  ctx.fillStyle='rgba(0,0,0,'+Math.min(.94,.5+k)+')'; ctx.fillRect(0,0,VW,VH);
+  const cx=VW/2+(Math.random()-.5)*30, cy=VH/2+(Math.random()-.5)*30;
+  const s=1+k*2.4;
+  ctx.fillStyle='#fff';
+  ctx.beginPath(); ctx.ellipse(cx-VW*.1*s,cy-VH*.08,VW*.05*s,VH*.06*s,.2,0,7); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx+VW*.1*s,cy-VH*.08,VW*.05*s,VH*.06*s,-.2,0,7); ctx.fill();
+  ctx.fillStyle='#ff2b3a';
+  ctx.beginPath(); ctx.ellipse(cx-VW*.1*s,cy-VH*.08,VW*.016*s,VH*.02*s,0,0,7); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx+VW*.1*s,cy-VH*.08,VW*.016*s,VH*.02*s,0,0,7); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.beginPath();
+  const mw=VW*.16*s, mh=VH*.12*s, my2=cy+VH*.08;
+  ctx.moveTo(cx-mw/2,my2);
+  for(let i=0;i<=8;i++) ctx.lineTo(cx-mw/2+i*mw/8,my2+((i%2)?mh:mh*.25));
+  ctx.lineTo(cx+mw/2,my2); ctx.closePath(); ctx.fill();
+}
+function drawMsgs(t){
+  ctx.textAlign='center';
+  let y=VH*.2;
+  for(const m of G.msgs){
+    const a=Math.min(1,(m.life-m.age)/.5, m.age/.15+.3);
+    ctx.globalAlpha=clamp(a,0,1);
+    ctx.font=(m.big?'900 22px':'800 16px')+' system-ui,sans-serif';
+    const w=ctx.measureText(m.t).width+30;
+    ctx.fillStyle='rgba(8,10,18,.85)'; rr(ctx,VW/2-w/2,y-20,w,m.big?32:26,10); ctx.fill();
+    ctx.strokeStyle='#000'; ctx.lineWidth=2; rr(ctx,VW/2-w/2,y-20,w,m.big?32:26,10); ctx.stroke();
+    ctx.fillStyle=m.col; ctx.fillText(m.t,VW/2,y+(m.big?4:0));
+    y+=m.big?42:34;
+  }
+  ctx.globalAlpha=1;
+}
+let rain=null, menuEyes={t:3,x:0,y:0,on:0};
+function menuBg(t,dt){
+  const sky=ctx.createLinearGradient(0,0,0,VH);
+  sky.addColorStop(0,'#05060c'); sky.addColorStop(1,'#0d0f1c');
+  ctx.fillStyle=sky; ctx.fillRect(0,0,VW,VH);
+  // máni
+  ctx.fillStyle='#d8dce8'; ctx.beginPath(); ctx.arc(VW*.82,VH*.16,38,0,7); ctx.fill();
+  ctx.fillStyle='#0d0f1c'; ctx.beginPath(); ctx.arc(VW*.82+14,VH*.16-8,32,0,7); ctx.fill();
+  // elding
+  if(Math.random()<.004){ G.lightning=.4; A.on&&A.ac&&A.thunder(); }
+  G.lightning=Math.max(0,G.lightning-dt);
+  if(G.lightning>0){ ctx.fillStyle='rgba(200,210,255,'+G.lightning*.5+')'; ctx.fillRect(0,0,VW,VH); }
+  // hótelið
+  const bw=Math.min(VW*.66,620), bh=VH*.62, bx=VW/2-bw/2, by=VH-bh;
+  ctx.fillStyle='#0a0812'; ctx.fillRect(bx,by,bw,bh);
+  ctx.fillStyle='#120e1e'; ctx.fillRect(bx-24,by+bh*.12,24,bh*.88); ctx.fillRect(bx+bw,by+bh*.12,24,bh*.88);
+  ctx.strokeStyle='#000'; ctx.lineWidth=3; ctx.strokeRect(bx,by,bw,bh);
+  const cols=7, rws=5;
+  for(let r=0;r<rws;r++)for(let c2=0;c2<cols;c2++){
+    const wx2=bx+bw*.08+c2*(bw*.84/cols), wy2=by+bh*.1+r*(bh*.7/rws), ww=bw*.84/cols*.5, wh=bh*.7/rws*.5;
+    const lit=Math.sin(t*.7+c2*3.1+r*1.7)>.86;
+    ctx.fillStyle=lit?'rgba(255,214,140,'+(.5+.3*Math.sin(t*9+c2)) +')':'#05040a';
+    ctx.fillRect(wx2,wy2,ww,wh);
+    ctx.strokeStyle='#000'; ctx.lineWidth=2; ctx.strokeRect(wx2,wy2,ww,wh);
+    if(menuEyes.on>0&&menuEyes.x===c2&&menuEyes.y===r){
+      ctx.fillStyle='#ff2b3a';
+      ctx.beginPath(); ctx.arc(wx2+ww*.32,wy2+wh*.45,2.5,0,7); ctx.arc(wx2+ww*.68,wy2+wh*.45,2.5,0,7); ctx.fill();
+    }
+  }
+  menuEyes.t-=dt; menuEyes.on-=dt;
+  if(menuEyes.t<=0){ menuEyes.t=4+Math.random()*5; menuEyes.on=1.6; menuEyes.x=(Math.random()*cols)|0; menuEyes.y=(Math.random()*rws)|0; }
+  // hurð + skilti
+  ctx.fillStyle='#1c1426'; ctx.fillRect(VW/2-34,VH-86,68,86); ctx.strokeRect(VW/2-34,VH-86,68,86);
+  ctx.fillStyle='rgba(255,200,90,.14)'; ctx.beginPath(); ctx.ellipse(VW/2,VH-4,90,26,0,Math.PI,0); ctx.fill();
+  const flick=Math.sin(t*11)>-.85?1:.25;
+  ctx.font='900 26px system-ui,sans-serif'; ctx.textAlign='center';
+  ctx.fillStyle='rgba(255,43,58,'+(.85*flick)+')';
+  ctx.shadowColor='#ff2b3a'; ctx.shadowBlur=18;
+  ctx.fillText('HÓTEL SALKA',VW/2,by+34); ctx.shadowBlur=0;
+  // rigning
+  if(!rain){ rain=[]; for(let i=0;i<130;i++) rain.push({x:Math.random(),y:Math.random(),s:.5+Math.random()}); }
+  ctx.strokeStyle='rgba(160,180,220,.25)'; ctx.lineWidth=1;
+  for(const r2 of rain){
+    r2.y+=dt*r2.s*.9; if(r2.y>1){r2.y=-.02;r2.x=Math.random();}
+    const px2=r2.x*VW, py2=r2.y*VH;
+    ctx.beginPath(); ctx.moveTo(px2,py2); ctx.lineTo(px2-4,py2+13*r2.s); ctx.stroke();
+  }
+  // þoka
+  ctx.fillStyle='rgba(140,150,180,.05)';
+  for(let i=0;i<4;i++){ ctx.beginPath(); ctx.ellipse((t*12*(i+1))%(VW+300)-150,VH-24-i*16,170,26,0,0,7); ctx.fill(); }
+}
+// ============================================================ LEIKJAFLÆÐI
+const $=id=>document.getElementById(id);
+let howtoFrom='menu';
+function show(id){ ['menu','netLobby','howto','pause','end'].forEach(s=>$(s).classList.toggle('hidden',s!==id)); }
+function updateBestTxt(){
+  $('bestTxt').textContent=G.best?('🏆 Besta skor: '+G.best+' stig'):'';
+  $('collTxt').textContent='👕 '+collOutfits.length+'/6 búningar · 🏅 '+achDone.length+'/'+ACH.length+' afrek · 🚪 '+escCount+' flóttar';
+}
+function startGame(np){
+  A.init(); A.startAmb();
+  G.online=false; G.np=np; G.mode='play'; G.over=false; G.won=false; G.paused=false; G.map=false;
+  G.time=0; G.score=0; G.coins=0; G.notes=0; G.outfitsFound=0;
+  G.keys={red:false,blue:false,green:false,purple:false,gold:false};
+  G.msgs=[]; G.parts=[]; G.scare=0; G.shake=0; G.flashFx=0; G.spotFx=0;
+  G.grace=G.diff===2?6:(G.diff===0?11:9); G.intro=4.5; G.endT=0; G.chaseI=0; G.lightT=7;
+  // v2: leikjanúmer (seed) stýrir uppröðun þessa leiks
+  G.seed=G.nextSeed||(10000+Math.floor(Math.random()*89999)); G.nextSeed=null;
+  rnd=mulberry(G.seed);
+  monSpawn=MONSTARTS[(rnd()*MONSTARTS.length)|0];
+  const evs=EVENTS.slice();
+  for(let i=evs.length-1;i>0;i--){ const j=(rnd()*(i+1))|0; const tmp=evs[i]; evs[i]=evs[j]; evs[j]=tmp; }
+  G.eventPool=evs.slice(0,3); G.eventT=40+rnd()*30;
+  G.blackout=0; G.flicker=0; G.stuckT=0; G.lastObj='';
+  G.usedSprint=false; G.gotHit=false; G.panHits=0; G.newAchs=[];
+  TC.vx=0; TC.vy=0; TC.sprint=false; TC.act=false; TC.flash=false; TC.pan=false;
+  const tsBtn=document.getElementById('tSprint'); if(tsBtn)tsBtn.classList.remove('on','pressed');
+  if(typeof resetJoyVisual==='function')resetJoyVisual();
+  buildMap(); buildStatic();
+  corrTiles=[]; roomCenters=[];
+  for(let y=0;y<MH;y++)for(let x=0;x<MW;x++)
+    if(grid[gi(x,y)]===F.HALL&&propGrid[gi(x,y)]<0&&doorGrid[gi(x,y)]<0) corrTiles.push([x,y]);
+  rooms.forEach(r=>roomCenters.push([(r.x0+r.x1)/2+.5,(r.y0+r.y1)/2+.5]));
+  players=[]; for(let i=0;i<np;i++) players.push(makePlayer(i));
+  mon=makeMonster();
+  show(null);
+  toast('Finndu lyklana og slepptu út! 👻','#ffe9a0',true);
+}
+function togglePause(){
+  if(G.mode!=='play'||G.over||G.won)return;
+  if(G.online&&!NET.host){toast('Aðeins gestgjafinn getur sett netleikinn í pásu.','#f4c542');return;}
+  G.paused=!G.paused;show(G.paused?'pause':null);
+  if(G.online&&NET.host)NET.send({type:'pause',paused:G.paused});
+}
+function gameOver(){ if(G.over||G.won)return; G.over=true; G.endT=1.2; A.lose(); A.stopAmb(); }
+function winGame(){
+  if(G.won||G.over)return;
+  G.won=true; G.score+=500; G.endT=1.6; A.win(); A.stopAmb();
+  toast('🎉 ÞÚ SLAPPST ÚT! +500','#8f8',true);
+  // v2: afrek og varanleg framvinda
+  escCount++; PERS.set('salka_esc',escCount);
+  if(!G.usedSprint) grantAch('engin_spor');
+  if(!G.gotHit) grantAch('osnertur');
+  if(rooms.every(r=>explored[gi(Math.floor((r.x0+r.x1)/2),Math.floor((r.y0+r.y1)/2))])) grantAch('hotelrynir');
+  if(((G.online&&players.filter(q=>q.netConnected!==false).length>1)||G.np===2)&&players.filter(q=>q.netConnected!==false).every(q=>!q.downed)) grantAch('bestu_vinir');
+  if(G.panHits>=4) grantAch('pannumeistari');
+  if(G.diff===2) grantAch('martrod');
+  for(let i=0;i<60;i++){ const a=Math.random()*Math.PI*2;
+    G.parts.push({x:37.5,y:48,vx:Math.cos(a)*(1+Math.random()*3),vy:-2-Math.random()*3,life:1.5,age:0,
+      col:['#ff4d5a','#f4c542','#4f8dff','#3fbf6f','#a862ea'][i%5],r:.12}); }
+}
+function showEnd(){
+  const won=G.won;
+  let nb=false;
+  if(G.score>G.best){ G.best=G.score; nb=true; try{localStorage.setItem('salka_best',String(G.best));}catch(e){} }
+  $('endTitle').textContent=won?'🎉 ÞÚ SLAPPST ÚT!':'💀 HANN NÁÐI ÞÉR…';
+  $('endTitle').className='big '+(won?'good':'bad');
+  $('endSub').textContent=won?'Hótel Salka sleppir þér… í þetta sinn.':'Hótelið gleypti enn einn gestinn. Reyndu aftur!';
+  $('endStats').innerHTML=
+    '<div><span>⏱ Tími</span><b>'+fmtT(G.time)+'</b></div>'+
+    '<div><span>🗝️ Lyklar</span><b>'+keysCount()+' / 5</b></div>'+
+    '<div><span>🪙 Peningar</span><b>'+G.coins+'</b></div>'+
+    '<div><span>👕 Búningar</span><b>'+G.outfitsFound+'</b></div>'+
+    '<div><span>📜 Miðar</span><b>'+G.notes+'</b></div>'+
+    '<div><span>🔀 Leikur</span><b>#'+G.seed+'</b></div>'+
+    '<div><span>⭐ STIG</span><b>'+G.score+(nb?' — NÝTT MET! 🏆':'')+'</b></div>'+
+    G.newAchs.map(a=>'<div><span>🏅 '+a.n+'</span><b>NÝTT AFREK!</b></div>').join('');
+  const dk='salka_best_d'+G.diff;
+  if(G.score>PERS.get(dk,0)) PERS.set(dk,G.score);
+  if(G.online){$('er').textContent=NET.host?'🔄 Hefja nýjan netleik':'⏳ Gestgjafinn ræður næsta leik';$('er').disabled=!NET.host;}
+  else{$('er').textContent='🔄 Spila aftur';$('er').disabled=false;}
+  show('end');
+}
+function toMenu(){ if(G.online&&NET.active){leaveOnline(false);} G.mode='menu'; G.paused=false; G.map=false; A.stopAmb(); updateBestTxt(); show('menu'); }
+function globalKey(code){
+  if(G.mode!=='play'||G.over||G.won)return;
+  if(code==='Escape') togglePause();
+  else if((code==='KeyM'||code==='Tab')&&!G.paused){ G.map=!G.map; A.paper(); }
+}
+// ============================================================ HNAPPAR
+function bind(id,fn){ $(id).addEventListener('click',e=>{ A.init(); fn(); e.currentTarget.blur(); }); }
+bind('b1',()=>startGame(1));
+bind('b2',()=>startGame(2));
+bind('bnet',()=>{show('netLobby');netStatus('');try{$('netName').value=localStorage.getItem('salka_net_name')||'Salka';}catch(e){$('netName').value='Salka';}});
+bind('netCreate',netCreateRoom);bind('netJoin',netJoinRoom);bind('netStart',netRequestStart);
+bind('netCopy',async()=>{try{await navigator.clipboard.writeText(NET.room);netStatus('Kóðinn var afritaður.','ok');}catch(e){netStatus('Kóði: '+NET.room,'ok');}});
+bind('netBack',()=>leaveOnline(true));
+$('netCode').addEventListener('input',e=>e.target.value=cleanCode(e.target.value));
+bind('bh',()=>{ howtoFrom='menu'; show('howto'); });
+bind('bhb',()=>show(howtoFrom));
+function setDiff(d){ G.diff=d; ['d0','d1','d2'].forEach((id,i)=>$(id).classList.toggle('sel',i===d)); }
+bind('d0',()=>setDiff(0));
+bind('d1',()=>setDiff(1));
+bind('d2',()=>setDiff(2));
+bind('soft',()=>{ G.soft=!G.soft; $('soft').textContent=G.soft?'👻 Hryllingur: léttur':'👻 Hryllingur: venjulegur'; $('soft').classList.toggle('sel',G.soft); });
+bind('daily',()=>{ const d=new Date(); G.nextSeed=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate(); startGame(1); });
+bind('bm',()=>{ A.on=!A.on; $('bm').textContent=A.on?'🔊 Hljóð: Á':'🔇 Hljóð: AF'; if(!A.on)A.stopAmb(); else if(G.mode==='play')A.startAmb(); });
+bind('bf',()=>{ try{ document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen(); }catch(e){} });
+bind('pr',()=>togglePause());
+bind('ph',()=>{ howtoFrom='pause'; show('howto'); });
+bind('pn',()=>G.online?netRequestStart():startGame(G.np));
+bind('pm',()=>toMenu());
+bind('er',()=>G.online?netRequestStart():startGame(G.np));
+bind('em',()=>toMenu());
+document.addEventListener('visibilitychange',()=>{ if(document.hidden&&G.mode==='play'&&!G.paused&&!G.over&&!G.won&&(!G.online||NET.host)) togglePause(); });
+// ============================================================ SNERTISTÝRING — v2.1 mobile
+const touchEl=$('touch'), joyZone=$('joyZone'), joyEl=$('joy'), stickEl=$('stick');
+if(window.matchMedia&&window.matchMedia('(pointer:coarse)').matches) TC.on=true;
+addEventListener('touchstart',()=>{ if(!TC.on)TC.on=true; },{passive:true});
+
+let joyId=null,joyCX=0,joyCY=0;
+function haptic(ms=9){ try{ if(navigator.vibrate)navigator.vibrate(ms); }catch(e){} }
+function resetJoyVisual(){
+  joyEl.classList.remove('active');
+  joyEl.style.left=''; joyEl.style.top=''; joyEl.style.bottom=''; joyEl.style.transform='';
+  stickEl.style.transform='translate(-50%,-50%)';
+}
+function placeJoy(e){
+  const z=joyZone.getBoundingClientRect();
+  const size=joyEl.offsetWidth||156,rad=size/2,pad=10;
+  const x=clamp(e.clientX-z.left,rad+pad,z.width-rad-pad);
+  const y=clamp(e.clientY-z.top,rad+pad,z.height-rad-pad);
+  joyEl.style.left=x+'px'; joyEl.style.top=y+'px'; joyEl.style.bottom='auto';
+  joyEl.style.transform='translate(-50%,-50%)';
+  joyCX=z.left+x; joyCY=z.top+y;
+  joyEl.classList.add('active');
+}
+joyZone.addEventListener('pointerdown',e=>{
+  if(joyId!==null)return;
+  e.preventDefault(); A.init(); TC.on=true; joyId=e.pointerId;
+  joyZone.setPointerCapture(joyId); placeJoy(e); joyMove(e); haptic(6);
+},{passive:false});
+joyZone.addEventListener('pointermove',e=>{ if(e.pointerId===joyId){e.preventDefault();joyMove(e);} },{passive:false});
+function joyEnd(e){
+  if(e.pointerId!==joyId)return;
+  joyId=null; TC.vx=0; TC.vy=0; resetJoyVisual();
+}
+joyZone.addEventListener('pointerup',joyEnd);
+joyZone.addEventListener('pointercancel',joyEnd);
+joyZone.addEventListener('lostpointercapture',e=>{ if(e.pointerId===joyId)joyEnd(e); });
+
+function joyMove(e){
+  const max=(joyEl.offsetWidth||156)*.37;
+  let dx=(e.clientX-joyCX)/max,dy=(e.clientY-joyCY)/max;
+  const raw=Math.hypot(dx,dy);
+  if(raw<.12){
+    TC.vx=0; TC.vy=0;
+    stickEl.style.transform='translate(-50%,-50%)';
+    return;
+  }
+  const nx=dx/raw,ny=dy/raw;
+  // Dauðasvæði + mjúk svörun gefur nákvæma hæga hreyfingu nálægt miðju.
+  let power=clamp((raw-.12)/.88,0,1);
+  power=Math.pow(power,1.35);
+  TC.vx=nx*power; TC.vy=ny*power;
+  const visual=clamp(raw,0,1)*max;
+  stickEl.style.transform='translate(calc(-50% + '+(nx*visual)+'px), calc(-50% + '+(ny*visual)+'px))';
+}
+
+function tapBtn(id,fn){
+  const el=$(id);
+  el.addEventListener('pointerdown',e=>{
+    e.preventDefault(); A.init(); el.classList.add('pressed'); haptic(); fn(el);
+    try{el.setPointerCapture(e.pointerId);}catch(_){}
+  },{passive:false});
+  const up=()=>el.classList.remove('pressed');
+  el.addEventListener('pointerup',up); el.addEventListener('pointercancel',up);
+  el.addEventListener('lostpointercapture',up);
+}
+tapBtn('tAct',()=>{ TC.act=true; });
+tapBtn('tFlash',()=>{ TC.flash=true; });
+tapBtn('tPan',()=>{ TC.pan=true; });
+tapBtn('tmap',()=>{ if(G.mode==='play'&&!G.paused){ G.map=!G.map; A.paper(); } });
+
+// Hlaup er nú haldið inni í stað þess að vera rofi sem getur gleymst virkur.
+const sprintEl=$('tSprint');
+function sprintOff(){
+  TC.sprint=false; sprintEl.classList.remove('on','pressed');
+}
+sprintEl.addEventListener('pointerdown',e=>{
+  e.preventDefault(); A.init(); TC.sprint=true;
+  sprintEl.classList.add('on','pressed'); haptic(7);
+  try{sprintEl.setPointerCapture(e.pointerId);}catch(_){}
+},{passive:false});
+sprintEl.addEventListener('pointerup',sprintOff);
+sprintEl.addEventListener('pointercancel',sprintOff);
+sprintEl.addEventListener('lostpointercapture',sprintOff);
+// ============================================================ STÆRÐ & AÐALLYKKJA
+function resize(){ DPR=Math.min(window.devicePixelRatio||1,2.5); VW=innerWidth; VH=innerHeight;
+  cv.width=Math.max(2,VW*DPR); cv.height=Math.max(2,VH*DPR); }
+addEventListener('resize',resize); resize();
+function render(t,dt){
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  ctx.fillStyle='#020308'; ctx.fillRect(0,0,VW,VH);
+  if(G.mode==='menu'){ menuBg(t,dt); return; }
+  const views=G.online?[{x:0,w:VW,p:players[NET.slot]||players[0]}]:(G.np===2?[{x:0,w:VW/2,p:players[0]},{x:VW/2,w:VW/2,p:players[1]}]:[{x:0,w:VW,p:players[0]}]);
+  views.forEach(v=>{ v.z=clamp(Math.min(v.w,VH)/13,26,90); });
+  for(const v of views) if(v.p)renderView(v,v.p,t);
+  if(!G.online&&G.np===2){ ctx.fillStyle='#000'; ctx.fillRect(VW/2-2,0,4,VH); }
+  if(G.map) drawMap(t);
+  // stigalína efst
+  const topTxt='⭐ '+G.score+'   🪙 '+G.coins+'   ⏱ '+fmtT(G.time);
+  ctx.font='900 15px system-ui,sans-serif'; ctx.textAlign='center';
+  const tw=ctx.measureText(topTxt).width+34;
+  ctx.fillStyle='rgba(8,10,18,.8)'; rr(ctx,VW/2-tw/2,10,tw,30,12); ctx.fill();
+  ctx.strokeStyle='#000'; ctx.lineWidth=2.5; rr(ctx,VW/2-tw/2,10,tw,30,12); ctx.stroke();
+  ctx.fillStyle='#f4c542'; ctx.fillText(topTxt,VW/2,31);
+  if(G.online){ctx.font='800 11px system-ui,sans-serif';ctx.textAlign='right';ctx.fillStyle=NET.connected?'#8fe0a8':'#ff8b96';ctx.fillText('🌐 '+NET.room+(NET.host?' · gestgjafi':''),VW-12,31);}
+  if(G.grace>0&&!G.over&&!G.won){
+    ctx.font='800 14px system-ui,sans-serif';
+    ctx.fillStyle='rgba(255,150,150,'+(.75+.25*Math.sin(t*6))+')';
+    ctx.fillText('👁 Húsvörðurinn vaknar eftir '+Math.ceil(G.grace)+' sek…',VW/2,62);
+  }
+  if(G.intro>0){
+    ctx.globalAlpha=clamp(G.intro>3.5?(4.5-G.intro)*2:G.intro/1.2,0,1);
+    ctx.font='900 clamp(20px,4vw,34px) system-ui,sans-serif';
+    ctx.font='900 '+Math.min(34,VW*.04)+'px system-ui,sans-serif';
+    ctx.fillStyle='#e8dcb8'; ctx.textAlign='center';
+    ctx.fillText('Velkomin á HÓTEL SÖLKU…',VW/2,VH*.4);
+    ctx.font='700 '+Math.min(18,VW*.025)+'px system-ui,sans-serif';
+    ctx.fillText('Enginn gestur hefur tékkað sig út. Fyrr en nú.',VW/2,VH*.4+34);
+    ctx.globalAlpha=1;
+  }
+  // leikjanúmerið (seed) — hægt að endurtaka sama leik
+  ctx.font='700 11px system-ui,sans-serif'; ctx.textAlign='right';
+  ctx.fillStyle='rgba(255,255,255,.3)'; ctx.fillText('Leikur #'+G.seed,VW-8,VH-8);
+  drawMsgs(t);
+  if(G.scare>0) drawScare();
+}
+// v2: gamepad-stuðningur — spilari 1 = fyrsta fjarstýring, spilari 2 = önnur
+function pollPads(){
+  let pads=[];
+  try{ pads=navigator.getGamepads?Array.from(navigator.getGamepads()).filter(Boolean):[]; }catch(e){ return; }
+  const limit=G.online?Math.min(1,pads.length):Math.min(2,pads.length);
+  for(let i=0;i<limit;i++){
+    const gp=pads[i], p=G.online?players[NET.slot]:players[i]; if(!p)break;
+    const bindIndex=G.online?0:i,prev=p.pad||(p.pad={});
+    p.gpx=Math.abs(gp.axes[0]||0)>.28?gp.axes[0]:0;
+    p.gpy=Math.abs(gp.axes[1]||0)>.28?gp.axes[1]:0;
+    p.gpSprint=!!((gp.buttons[5]&&gp.buttons[5].pressed)||(gp.buttons[1]&&gp.buttons[1].pressed));
+    const edge=(bi,fn)=>{ const on=!!(gp.buttons[bi]&&gp.buttons[bi].pressed); if(on&&!prev['b'+bi])fn(); prev['b'+bi]=on; };
+    edge(0,()=>pressed.add(BIND[bindIndex].act));
+    edge(2,()=>pressed.add(BIND[bindIndex].pan));
+    edge(3,()=>pressed.add(BIND[bindIndex].flash));
+    edge(9,()=>togglePause());
+    edge(8,()=>{ if(G.mode==='play'&&!G.paused){ G.map=!G.map; A.paper(); } });
+  }
+}
+let lastT=0;
+function loop(ts){
+  requestAnimationFrame(loop);
+  const t=ts/1000;
+  let dt=(ts-lastT)/1000; if(!(dt>0)||dt>.05) dt=.016; lastT=ts;
+  pollPads();
+  if(G.mode==='play'&&!G.paused) update(dt);
+  render(t,dt);
+  pressed.clear();
+  touchEl.classList.toggle('hidden',!(TC.on&&G.mode==='play'&&(G.online||G.np===1)&&!G.paused));
+}
+updateBestTxt();
+requestAnimationFrame(loop);
+// aðgengi fyrir prófanir
+window.SALKA={G,BIND,NET,get players(){return players},get mon(){return mon},get doors(){return doors},start:startGame,objective,keysCount};
+})();
+</script>
+</body>
+</html>
