@@ -1,6 +1,6 @@
 import { DurableObject } from "cloudflare:workers";
 
-const CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+const CODE_CHARS = "ABCDEFGHJKMNPQRTUVWXYZ";
 const MAX_PLAYERS = 4;
 const ROOM_TTL_MS = 30 * 60 * 1000;
 
@@ -27,6 +27,22 @@ function securityHeaders(response) {
   headers.set("permissions-policy", "camera=(), geolocation=(), microphone=(), payment=(), usb=(), fullscreen=(self), gamepad=(self)");
   headers.set("content-security-policy", "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; media-src 'self' blob: data:; connect-src 'self' ws: wss:; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'; worker-src 'self' blob:");
   return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+}
+
+async function serveAsset(request, env) {
+  const response = await env.ASSETS.fetch(request);
+  const contentType = response.headers.get("content-type") || "";
+  if (response.ok && contentType.includes("text/html")) {
+    let html = await response.text();
+    if (!html.includes("/online-fixes.js")) {
+      html = html.replace("</body>", '<script src="/online-fixes.js?v=1"></script></body>');
+    }
+    const headers = new Headers(response.headers);
+    headers.delete("content-length");
+    headers.set("cache-control", "no-cache");
+    return securityHeaders(new Response(html, { status: response.status, statusText: response.statusText, headers }));
+  }
+  return securityHeaders(response);
 }
 
 export default {
@@ -73,7 +89,7 @@ export default {
     }
 
     if (url.pathname.startsWith("/api/")) return json({ error: "API-leið fannst ekki." }, { status: 404 });
-    return securityHeaders(await env.ASSETS.fetch(request));
+    return serveAsset(request, env);
   },
 };
 
@@ -153,6 +169,8 @@ export class GameRoom extends DurableObject {
     } else {
       player.name = name;
     }
+    player.connected = true;
+    delete player.disconnectedAt;
 
     // Close an older socket for the same client before attaching the new one.
     for (const old of this.ctx.getWebSockets()) {
@@ -163,7 +181,6 @@ export class GameRoom extends DurableObject {
     const pair = new WebSocketPair();
     const [client, server] = Object.values(pair);
     this.ctx.acceptWebSocket(server);
-    player.connected = true;
     this.room.updatedAt = Date.now();
     const attachment = { clientId: player.id, slot: player.slot };
     server.serializeAttachment(attachment);
@@ -255,19 +272,51 @@ export class GameRoom extends DurableObject {
     if (message.type === "ping") this.send(ws, { type: "pong", at: Date.now() });
   }
 
-  async webSocketClose(ws) {
+  async webSocketClose(ws, code, reason) {
     const a = ws.deserializeAttachment();
     if (!a || !this.room) return;
-    const player = this.room.players.find((p) => p.id === a.clientId);
-    if (player) player.connected = false;
-    if (this.room.phase === "lobby") this.room.players = this.room.players.filter((p) => p.connected);
 
-    if (this.room.hostId === a.clientId) {
-      const replacement = this.room.players.filter((p) => p.connected).sort((x, y) => x.slot - y.slot)[0];
+    // When a client reconnects, closing the older socket must not mark the
+    // newly attached socket as disconnected.
+    if (code === 4001 && reason === "reconnected") return;
+
+    const player = this.room.players.find((p) => p.id === a.clientId);
+    if (!player) return;
+    const intentionalLeave = code === 1000 && reason === "leave";
+    const wasHost = this.room.hostId === player.id;
+
+    if (intentionalLeave) {
+      this.room.players = this.room.players.filter((p) => p.id !== player.id);
+      if (!this.room.players.length) {
+        this.room = null;
+        await this.ctx.storage.deleteAll();
+        return;
+      }
+    } else {
+      player.connected = false;
+      player.disconnectedAt = Date.now();
+    }
+
+    if (wasHost) {
+      const replacement = this.room.players
+        .filter((p) => p.connected)
+        .sort((x, y) => x.slot - y.slot)[0];
       if (replacement) {
         this.room.hostId = replacement.id;
         this.broadcast({ type: "host_changed", hostId: replacement.id, hostName: replacement.name, players: this.publicPlayers() });
+      } else if (intentionalLeave) {
+        const fallback = this.room.players.slice().sort((x, y) => x.slot - y.slot)[0];
+        this.room.hostId = fallback ? fallback.id : null;
       }
+      // On an unexpected disconnect with no replacement, the host keeps the
+      // role and can reconnect with the same clientId.
+    }
+
+    if (this.room.hostId && !this.room.players.some((p) => p.id === this.room.hostId)) {
+      const replacement = this.room.players
+        .slice()
+        .sort((x, y) => Number(y.connected) - Number(x.connected) || x.slot - y.slot)[0];
+      this.room.hostId = replacement ? replacement.id : null;
     }
 
     this.room.updatedAt = Date.now();
